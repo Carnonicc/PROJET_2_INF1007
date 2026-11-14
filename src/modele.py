@@ -137,6 +137,7 @@ class ModeleLineaire(ModelePrix):
 
 
 
+    @chronometrer
     def entrainer(self, X: pd.DataFrame, y: pd.Series) -> None:
         if len(X)==0 or len( y)==0:
             raise ValueError('la fonction entrainer ne marche pas, verfie les entres')

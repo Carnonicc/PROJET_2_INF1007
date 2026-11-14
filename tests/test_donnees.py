@@ -9,7 +9,7 @@ from donnees import (
     CIBLE, COLONNES, COLONNES_CATEGORIELLES, COLONNES_NUMERIQUES,
     JeuDeDonnees, Variable, VariableCategorielle, VariableNumerique,
     charger_csv, construire_hierarchie, creer_variables, nettoyer,
-    verifier_combinaison,
+    verifier_combinaison, miles_vers_kilometres, kilometres_vers_miles,
 )
 from exceptions import DonneeInvalideError
 
@@ -25,6 +25,11 @@ def ligne(price=20000, miles=50000, year=2018, engine_size=2.0, make="Honda",
             "make": make, "model": model, "trim": trim, "body_type": body_type,
             "drivetrain": drivetrain, "transmission": transmission,
             "fuel_type": fuel_type, "engine_block": engine_block}
+
+
+def test_conversion_miles_kilometres():
+    assert miles_vers_kilometres(1) == pytest.approx(1.609344)
+    assert kilometres_vers_miles(1) == pytest.approx(0.621371192237334)
 
 
 @pytest.fixture

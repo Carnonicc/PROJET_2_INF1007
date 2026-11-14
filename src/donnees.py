@@ -14,10 +14,21 @@ from sklearn.model_selection import train_test_split
 from exceptions import DonneeInvalideError
 
 CIBLE = "price"
+KILOMETRES_PAR_MILE = 1.609344
 COLONNES_NUMERIQUES = ["miles", "year", "engine_size"]
 COLONNES_CATEGORIELLES = ["make", "model", "trim", "body_type", "drivetrain",
                           "transmission", "fuel_type", "engine_block"]
 COLONNES = [CIBLE] + COLONNES_NUMERIQUES + COLONNES_CATEGORIELLES
+
+
+def miles_vers_kilometres(miles: float) -> float:
+    """Convertit des miles en kilomètres."""
+    return miles * KILOMETRES_PAR_MILE
+
+
+def kilometres_vers_miles(kilometres: float) -> float:
+    """Convertit des kilomètres en miles."""
+    return kilometres / KILOMETRES_PAR_MILE
 
 
 def extraire_quebec(chemin_source: str, chemin_sortie: str) -> int:

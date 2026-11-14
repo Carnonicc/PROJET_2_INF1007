@@ -4,12 +4,17 @@ import math
 import tkinter as tk
 from tkinter import messagebox, ttk
 
+if __package__:
+    from .donnees import miles_vers_kilometres
+else:
+    from donnees import miles_vers_kilometres
+
 
 METADONNEES_DEMONSTRATION = {
     "variables": [
         {
             "nom": "miles",
-            "etiquette": "Kilométrage (miles)",
+            "etiquette": "Kilométrage (km)",
             "type": "entier",
             "minimum": 0,
             "maximum": 999999,
@@ -106,10 +111,72 @@ def _metadonnees_du_catalogue(
             variable["choix"] = sorted(set(valeurs), key=str.casefold)
         else:
             bornes = [float(valeur) for valeur in valeurs]
-            variable["minimum"] = min(bornes)
-            variable["maximum"] = max(bornes)
+            minimum = min(bornes)
+            maximum = max(bornes)
+            if nom == "miles":
+                minimum = miles_vers_kilometres(minimum)
+                maximum = miles_vers_kilometres(maximum)
+            variable["minimum"] = minimum
+            variable["maximum"] = maximum
         variables.append(variable)
     return {"variables": variables}
+
+
+def adapter_metadonnees_modele(metadonnees_modele, catalogue):
+    variables_modele = metadonnees_modele.get("variables")
+    if not isinstance(variables_modele, dict):
+        raise ValueError("Les variables du modèle sont absentes ou invalides.")
+
+    definitions_interface = METADONNEES_DEMONSTRATION["variables"]
+    noms_attendus = {definition["nom"] for definition in definitions_interface}
+    noms_fournis = set(variables_modele)
+    if noms_fournis != noms_attendus:
+        manquants = sorted(noms_attendus - noms_fournis)
+        supplementaires = sorted(noms_fournis - noms_attendus)
+        raise ValueError(
+            "Les variables du modèle ne correspondent pas aux champs de "
+            f"l’interface (manquantes : {manquants}, supplémentaires : "
+            f"{supplementaires})."
+        )
+
+    variables = []
+    for definition in definitions_interface:
+        nom = definition["nom"]
+        variable_modele = variables_modele[nom]
+        variable = {
+            "nom": nom,
+            "etiquette": definition["etiquette"],
+            "type": definition["type"],
+        }
+        if definition["type"] == "categorie":
+            if variable_modele.get("type") != "categorielle":
+                raise ValueError(f"Le type de la variable « {nom} » est invalide.")
+            variable["choix"] = _options_compatibles(catalogue, nom, {})
+        else:
+            if variable_modele.get("type") != "numerique":
+                raise ValueError(f"Le type de la variable « {nom} » est invalide.")
+            try:
+                minimum = float(variable_modele["min"])
+                maximum = float(variable_modele["max"])
+            except (KeyError, TypeError, ValueError) as erreur:
+                raise ValueError(f"Les bornes de la variable « {nom} » sont invalides.") from erreur
+            if not math.isfinite(minimum) or not math.isfinite(maximum) or minimum > maximum:
+                raise ValueError(f"Les bornes de la variable « {nom} » sont invalides.")
+            if nom == "miles":
+                minimum = miles_vers_kilometres(minimum)
+                maximum = miles_vers_kilometres(maximum)
+            variable["minimum"] = minimum
+            variable["maximum"] = maximum
+        variables.append(variable)
+
+    return {
+        "variables": variables,
+        "metriques": metadonnees_modele.get("metriques", {}),
+    }
+
+
+def formater_montant(montant):
+    return f"{montant:,.0f}".replace(",", " ")
 
 
 class InterfaceUtilisateur(ttk.Frame):
@@ -134,6 +201,10 @@ class InterfaceUtilisateur(ttk.Frame):
         self.lignes_historique = []
         self.pack(fill="both", expand=True)
         self._construire_fenetre()
+        if self.on_actualiser_historique is not None:
+            self._demander_actualisation()
+        if self.on_actualiser_historique is not None:
+            self._demander_actualisation()
 
     def _construire_fenetre(self):
         avertissement = ttk.Label(
@@ -213,15 +284,19 @@ class InterfaceUtilisateur(ttk.Frame):
 
         ttk.Label(
             panneau_resultat,
-            text="Score R² du modèle (multiplié par 100)",
+            text="Erreur absolue moyenne sur le test (MAE)",
             padding=10,
         ).grid(row=1, column=0, sticky="s")
-        self.score_r2 = tk.StringVar(
-            value="Non disponible (modèle non entraîné)"
+        mae = self.metadonnees.get("metriques", {}).get("mae")
+        valeur_mae = (
+            f"{formater_montant(mae)} $"
+            if isinstance(mae, (int, float)) and math.isfinite(mae) and mae >= 0
+            else "Non disponible"
         )
+        self.score_mae = tk.StringVar(value=valeur_mae)
         ttk.Label(
             panneau_resultat,
-            textvariable=self.score_r2,
+            textvariable=self.score_mae,
             font=("TkDefaultFont", 24, "bold"),
             padding=10,
         ).grid(row=2, column=0, sticky="nsew")
@@ -256,7 +331,14 @@ class InterfaceUtilisateur(ttk.Frame):
                 minimum = variable.get("minimum")
                 maximum = variable.get("maximum")
                 if minimum is not None and maximum is not None:
-                    etiquette = f"{etiquette} ({minimum:g} à {maximum:g})"
+                    if variable["type"] == "entier":
+                        bornes = (
+                            f"{formater_montant(minimum)} à "
+                            f"{formater_montant(maximum)}"
+                        )
+                    else:
+                        bornes = f"{minimum:g} à {maximum:g}"
+                    etiquette = f"{etiquette} ({bornes})"
                 champ = ttk.Entry(cellule, width=32)
                 if variable["nom"] == "year":
                     champ.bind(
@@ -367,12 +449,26 @@ class InterfaceUtilisateur(ttk.Frame):
                 str(erreur),
                 parent=self.winfo_toplevel(),
             )
+        except OSError as erreur:
+            messagebox.showerror(
+                "Historique non sauvegardé",
+                str(erreur),
+                parent=self.winfo_toplevel(),
+            )
 
     def _demander_actualisation(self):
         if self.on_actualiser_historique is None:
             self.statut.set("L’historique sera fourni par le traitement du modèle.")
             return
-        self.on_actualiser_historique(self)
+        try:
+            self.on_actualiser_historique(self)
+        except (OSError, ValueError) as erreur:
+            self.statut.set("Impossible de charger l’historique.")
+            messagebox.showerror(
+                "Historique indisponible",
+                str(erreur),
+                parent=self.winfo_toplevel(),
+            )
 
     def _afficher_details(self, _evenement= None):
         del _evenement
@@ -397,11 +493,6 @@ class InterfaceUtilisateur(ttk.Frame):
     def afficher_resultat(self, texte):
         self.resultat.set(texte)
 
-    def afficher_score_r2(self, score_r2):
-        if not math.isfinite(score_r2):
-            raise ValueError("Le score R² doit être un nombre fini.")
-        self.score_r2.set(f"{score_r2 * 100:.1f} %")
-
     def afficher_historique(self, lignes):
         self.lignes_historique = lignes
         for identifiant in self.tableau.get_children():
@@ -412,13 +503,14 @@ class InterfaceUtilisateur(ttk.Frame):
                 str(caracteristiques.get(cle, ""))
                 for cle in ("year", "make", "model")
             ).strip()
+            prix = formater_montant(float(ligne["prix_estime"]))
             self.tableau.insert(
                 "",
                 "end",
                 iid=str(index),
                 values=(
                     ligne.get("date_heure", ""),
-                    ligne.get("prix_estime", ""),
+                    f"{prix} $",
                     vehicule,
                 ),
             )

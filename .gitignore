@@ -1,2 +1,7 @@
 donnees/ca-dealers-used.csv
 #ca-dealers-used-qc.csv
+# fichiers générés par Python et coverage
+__pycache__/
+*.pyc
+.coverage
+.pytest_cache/

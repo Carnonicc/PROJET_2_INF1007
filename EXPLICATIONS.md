@@ -341,16 +341,30 @@ Format du JSON écrit :
 
 ```json
 {
+  "version_schema": 2,
   "variables": {
     "year": {"type": "numerique", "min": 2000, "max": 2022},
     "make": {"type": "categorielle", "valeurs": ["Acura", "Toyota"]}
   },
   "metriques": {"mae": 3456.7, "taux_2000": 0.41},
-  "hierarchie": {"Acura": {"MDX": ["Base", "Tech"]}}
+  "hierarchie": [
+    {
+      "marque": "Acura",
+      "modeles": [
+        {"nom": "MDX", "versions": ["Base", "Tech"]}
+      ]
+    }
+  ]
 }
 ```
 
-L'interface lira ce fichier au lancement pour **se construire** (un champ par variable, les listes déroulantes, les cascades) sans réentraîner le modèle. Utiliser `with open(...)` et `json.dump` / `json.load`.
+La hiérarchie utilise des listes plutôt que des noms de marque et de modèle
+comme clés JSON : deux noms qui ne diffèrent que par la casse, comme `I3` et
+`i3`, restent distincts avec les lecteurs JSON sensibles ou non à la casse.
+`charger_metadonnees` reconstruit la hiérarchie imbriquée en dictionnaires pour
+les appels Python et continue d'accepter les anciens fichiers sans
+`version_schema`. Une version inconnue lève `ValueError`. L'interface actuelle
+n'est pas encore connectée au chargement de ce fichier.
 
 ---
 

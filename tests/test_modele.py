@@ -1,5 +1,6 @@
 """Tests du module modele (métriques NumPy, référence, régression, sauvegarde)."""
 
+import json
 import os
 
 import numpy as np
@@ -182,9 +183,53 @@ def test_metadonnees_aller_retour(tmp_path):
     sauvegarder_metadonnees(chemin, variables, {"mae": 3456.7, "taux_2000": 0.41}, hierarchie)
     meta = charger_metadonnees(chemin)
     assert meta["hierarchie"] == hierarchie
+    with open(chemin, encoding="utf-8") as fichier:
+        fichier_json = json.load(fichier)
+    assert fichier_json["version_schema"] == 2
+    assert fichier_json["hierarchie"] == [
+        {"marque": "Acura", "modeles": [
+            {"nom": "MDX", "versions": ["Base", "Tech"]}]},
+        {"marque": "Toyota", "modeles": [
+            {"nom": "Corolla", "versions": ["LE"]}]},
+    ]
     assert meta["variables"]["year"] == {"type": "numerique", "min": 2000, "max": 2022}
     assert meta["variables"]["make"] == {"type": "categorielle", "valeurs": ["Acura", "Toyota"]}
     assert meta["metriques"]["mae"] == pytest.approx(3456.7)
+
+
+def test_metadonnees_preservent_les_modeles_differents_par_casse(tmp_path):
+    chemin = os.path.join(tmp_path, "metadonnees.json")
+    hierarchie = {"BMW": {"I3": ["s"], "i3": ["Base"]}}
+    sauvegarder_metadonnees(chemin, [], {}, hierarchie)
+
+    with open(chemin, encoding="utf-8") as fichier:
+        fichier_json = json.load(fichier)
+
+    assert fichier_json["hierarchie"] == [
+        {"marque": "BMW", "modeles": [
+            {"nom": "I3", "versions": ["s"]},
+            {"nom": "i3", "versions": ["Base"]},
+        ]}
+    ]
+    assert charger_metadonnees(chemin)["hierarchie"] == hierarchie
+
+
+def test_charger_metadonnees_anciennes_sans_version(tmp_path):
+    chemin = os.path.join(tmp_path, "metadonnees.json")
+    hierarchie = {"BMW": {"I3": ["s"], "i3": ["Base"]}}
+    with open(chemin, "w", encoding="utf-8") as fichier:
+        json.dump({"variables": {}, "metriques": {}, "hierarchie": hierarchie}, fichier)
+
+    assert charger_metadonnees(chemin)["hierarchie"] == hierarchie
+
+
+def test_charger_metadonnees_refuse_une_version_inconnue(tmp_path):
+    chemin = os.path.join(tmp_path, "metadonnees.json")
+    with open(chemin, "w", encoding="utf-8") as fichier:
+        json.dump({"version_schema": 99}, fichier)
+
+    with pytest.raises(ValueError, match="Version de métadonnées"):
+        charger_metadonnees(chemin)
 
 
 def test_charger_metadonnees_inexistant(tmp_path):

@@ -21,6 +21,7 @@ from sklearn.preprocessing import OneHotEncoder
 from exceptions import ModeleNonEntraineError  # noqa: F401  (à utiliser)
 
 TOLERANCE = 2000.0
+VERSION_SCHEMA_METADONNEES = 2
 
 
 def taux_a_tolerance(y_vrai: np.ndarray, y_predit: np.ndarray,
@@ -175,16 +176,30 @@ def sauvegarder_metadonnees(chemin: str, variables: list, metriques: dict[str, f
                             hierarchie: dict[str, dict[str, list[str]]]) -> None:
     """Écrit le JSON de métadonnées.
 
-    Format : {"variables": {nom: variable.vers_dict(), ...},
+    Format version 2 : {"version_schema": 2,
+              "variables": {nom: variable.vers_dict(), ...},
               "metriques": {...},
-              "hierarchie": {marque: {modèle: [versions]}}}
+              "hierarchie": [{"marque": ..., "modeles": [
+                  {"nom": ..., "versions": [...]}, ...]}, ...]}
     La hiérarchie (voir donnees.construire_hierarchie) sert aux listes en
-    cascade marque → modèle → version de l'interface.
+    cascade marque → modèle → version de l'interface. Les listes préservent les
+    noms qui ne diffèrent que par la casse, même avec des lecteurs JSON qui ne
+    distinguent pas la casse des clés.
     """
     metadonnees = {
+        "version_schema": VERSION_SCHEMA_METADONNEES,
         "variables": {variable.nom: variable.vers_dict() for variable in variables},
         "metriques": metriques,
-        "hierarchie": hierarchie,
+        "hierarchie": [
+            {
+                "marque": marque,
+                "modeles": [
+                    {"nom": nom_modele, "versions": versions}
+                    for nom_modele, versions in modeles.items()
+                ],
+            }
+            for marque, modeles in hierarchie.items()
+        ],
     }
     with open(chemin, "w", encoding="utf-8") as f:
         # indent=2 : fichier lisible ; ensure_ascii=False : garde les accents tels quels
@@ -197,5 +212,18 @@ def charger_metadonnees(chemin: str) -> dict:
         raise FileNotFoundError(f"Fichier de métadonnées introuvable : {chemin}")
     with open(chemin, encoding="utf-8") as f:
         metadonnees = json.load(f)
+    version = metadonnees.get("version_schema")
+    if version is None:
+        return metadonnees
+    if version != VERSION_SCHEMA_METADONNEES:
+        raise ValueError(f"Version de métadonnées non prise en charge : {version}")
+
+    hierarchie = {}
+    for entree_marque in metadonnees["hierarchie"]:
+        modeles = {}
+        for entree_modele in entree_marque["modeles"]:
+            modeles[entree_modele["nom"]] = entree_modele["versions"]
+        hierarchie[entree_marque["marque"]] = modeles
+    metadonnees["hierarchie"] = hierarchie
     return metadonnees
 

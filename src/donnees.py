@@ -9,6 +9,7 @@ import os
 from abc import ABC, abstractmethod
 
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 from exceptions import DonneeInvalideError
 
@@ -67,8 +68,9 @@ def nettoyer(df: pd.DataFrame) -> pd.DataFrame:
     """
     # 1. lignes complètes : dropna renvoie un NOUVEAU DataFrame, df n'est pas modifié
     propre = df.dropna(subset=COLONNES)
-    # 2. valeurs impossibles : on garde les prix > 0 et les kilométrages >= 0
-    valide = (propre[CIBLE] > 0) & (propre[COLONNES_NUMERIQUES] >= 0)
+    # 2. valeurs impossibles : on garde les prix > 0 et les colonnes numériques >= 0
+    #    .all(axis=1) : Vrai si TOUTES les colonnes numériques de la ligne sont >= 0
+    valide = (propre[CIBLE] > 0) & (propre[COLONNES_NUMERIQUES] >= 0).all(axis=1)
     propre = propre[valide]
     # 3. index renuméroté 0, 1, 2... (sinon il garde des « trous »)
     return propre.reset_index(drop=True)
@@ -193,7 +195,14 @@ def creer_variables(df: pd.DataFrame) -> list[Variable]:
               COLONNES_NUMERIQUES, puis une VariableCategorielle (valeurs uniques)
               pour chaque colonne de COLONNES_CATEGORIELLES, dans cet ordre.
     """
-    raise NotImplementedError
+    variables: list[Variable] = []
+    for colonne in COLONNES_NUMERIQUES:
+        # intervalle permis = plus petite et plus grande valeur vues dans les données
+        variables.append(VariableNumerique(colonne, df[colonne].min(), df[colonne].max()))
+    for colonne in COLONNES_CATEGORIELLES:
+        # valeurs permises = valeurs différentes présentes dans la colonne
+        variables.append(VariableCategorielle(colonne, df[colonne].unique().tolist()))
+    return variables
 
 
 def construire_hierarchie(df: pd.DataFrame) -> dict[str, dict[str, list[str]]]:
@@ -204,7 +213,16 @@ def construire_hierarchie(df: pd.DataFrame) -> dict[str, dict[str, list[str]]]:
               que les combinaisons présentes dans les données. Un DataFrame vide
               donne {}.
     """
-    raise NotImplementedError
+    # un seul exemplaire de chaque trio (marque, modèle, version), en texte, trié
+    trios = (df[["make", "model", "trim"]].astype(str)
+             .drop_duplicates()
+             .sort_values(["make", "model", "trim"]))
+    hierarchie: dict[str, dict[str, list[str]]] = {}
+    for marque, modele, version in zip(trios["make"], trios["model"], trios["trim"]):
+        # setdefault : renvoie la valeur de la clé, en la créant d'abord si elle n'existe pas
+        modeles_de_la_marque = hierarchie.setdefault(marque, {})
+        modeles_de_la_marque.setdefault(modele, []).append(version)
+    return hierarchie
 
 
 def verifier_combinaison(hierarchie: dict[str, dict[str, list[str]]],
@@ -217,7 +235,13 @@ def verifier_combinaison(hierarchie: dict[str, dict[str, list[str]]],
              marque est inconnue, si le modèle n'existe pas pour cette marque ou
              si la version n'existe pas pour ce modèle.
     """
-    raise NotImplementedError
+    if marque not in hierarchie:
+        raise DonneeInvalideError(f"La marque « {marque} » est inconnue.")
+    if modele not in hierarchie[marque]:
+        raise DonneeInvalideError(f"Le modèle « {modele} » n'existe pas pour {marque}.")
+    if version not in hierarchie[marque][modele]:
+        raise DonneeInvalideError(
+            f"La version « {version} » n'existe pas pour {marque} {modele}.")
 
 
 class JeuDeDonnees:
@@ -225,11 +249,11 @@ class JeuDeDonnees:
 
     def __init__(self, df: pd.DataFrame) -> None:
         """Reçoit un DataFrame brut, le nettoie et le garde en attribut protégé."""
-        raise NotImplementedError
+        self._df = nettoyer(df)
 
     def __len__(self) -> int:
         """Nombre de lignes après nettoyage."""
-        raise NotImplementedError
+        return len(self._df)
 
     def separer(self, taille_test: float = 0.2, graine: int = 42
                 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
@@ -238,4 +262,10 @@ class JeuDeDonnees:
         X contient COLONNES_NUMERIQUES + COLONNES_CATEGORIELLES ; y contient CIBLE.
         Échoue : ValueError si taille_test n'est pas strictement entre 0 et 1.
         """
-        raise NotImplementedError
+        if not 0 < taille_test < 1:
+            raise ValueError(f"taille_test doit être entre 0 et 1 (exclus), reçu {taille_test}.")
+        X = self._df[COLONNES_NUMERIQUES + COLONNES_CATEGORIELLES]   # entrées, SANS le prix
+        y = self._df[CIBLE]                                          # réponse : le prix
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=taille_test, random_state=graine)
+        return X_train, X_test, y_train, y_test

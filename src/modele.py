@@ -101,11 +101,11 @@ class ModelePrix(ABC):
         if len(y)==0 or len(X)==0 :
             raise ValueError('la fonction evaluer ne marche pas, verfie les entres')
         else:
-            mae=erreur_absolue_moyenne(self.predire(X),y)
-            taux= taux_a_tolerance(self.predire(X),y)
-            rmse=racine_erreur_quadratique(self.predire(X),y)
-
-            return  {"mae": mae, "rmse": rmse, "taux_2000": taux} 
+            predictions = self.predire(X)          # une seule prédiction, réutilisée 3 fois
+            mae = erreur_absolue_moyenne(y, predictions)
+            rmse = racine_erreur_quadratique(y, predictions)
+            taux = taux_a_tolerance(y, predictions)
+            return {"mae": mae, "rmse": rmse, "taux_2000": taux}
     
 
 
@@ -159,8 +159,7 @@ class ModeleLineaire(ModelePrix):
         Échoue : ModeleNonEntraineError si le modèle n'est pas entraîné.
         """
         if not self._entraine:
-            raise ModeleNonEntraineError
-        os.makedirs("modeles", exist_ok=True)
+            raise ModeleNonEntraineError("Impossible de sauvegarder un modèle non entraîné.")
         joblib.dump(self, chemin)
 
     @staticmethod
@@ -181,13 +180,20 @@ def sauvegarder_metadonnees(chemin: str, variables: list, metriques: dict[str, f
     La hiérarchie (voir donnees.construire_hierarchie) sert aux listes en
     cascade marque → modèle → version de l'interface.
     """
-    raise NotImplementedError
+    metadonnees = {
+        "variables": {variable.nom: variable.vers_dict() for variable in variables},
+        "metriques": metriques,
+        "hierarchie": hierarchie,
+    }
+    with open(chemin, "w", encoding="utf-8") as f:
+        # indent=2 : fichier lisible ; ensure_ascii=False : garde les accents tels quels
+        json.dump(metadonnees, f, indent=2, ensure_ascii=False)
 
 
 def charger_metadonnees(chemin: str) -> dict:
     """Relit le JSON de métadonnées. Échoue : FileNotFoundError."""
-    if os.path.exists(chemin):
-        raise ValueError("fichier Json inexista")
+    if not os.path.exists(chemin):
+        raise FileNotFoundError(f"Fichier de métadonnées introuvable : {chemin}")
     with open(chemin, encoding="utf-8") as f:
         metadonnees = json.load(f)
     return metadonnees

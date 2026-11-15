@@ -1,6 +1,5 @@
 """Lecture, nettoyage et description des données de voitures d'occasion du Québec.
 
-Squelette : les fonctions marquées NotImplementedError sont à compléter.
 Les tests de tests/test_donnees.py décrivent le comportement attendu.
 """
 
@@ -18,6 +17,34 @@ COLONNES_NUMERIQUES = ["miles", "year", "engine_size"]
 COLONNES_CATEGORIELLES = ["make", "model", "trim", "body_type", "drivetrain",
                           "transmission", "fuel_type", "engine_block"]
 COLONNES = [CIBLE] + COLONNES_NUMERIQUES + COLONNES_CATEGORIELLES
+# colonnes numériques qui n'acceptent que des nombres entiers (engine_size est décimal)
+COLONNES_ENTIERES = ["miles", "year"]
+# le CSV et le modèle sont en miles, mais l'utilisateur saisit des kilomètres
+KILOMETRES_PAR_MILE = 1.609344
+# texte affiché à l'utilisateur pour chaque colonne (interface et messages d'erreur)
+ETIQUETTES = {
+    "miles": "Kilométrage (km)",
+    "year": "Année",
+    "engine_size": "Cylindrée (litres)",
+    "make": "Marque",
+    "model": "Modèle",
+    "trim": "Version",
+    "body_type": "Type de carrosserie",
+    "drivetrain": "Roues motrices",
+    "transmission": "Boîte de vitesses",
+    "fuel_type": "Type de carburant",
+    "engine_block": "Configuration du moteur",
+}
+
+
+def miles_vers_kilometres(miles: float) -> float:
+    """Convertit des miles en kilomètres (idée et code d'Avery)."""
+    return miles * KILOMETRES_PAR_MILE
+
+
+def kilometres_vers_miles(kilometres: float) -> float:
+    """Convertit des kilomètres en miles (idée et code d'Avery)."""
+    return kilometres / KILOMETRES_PAR_MILE
 
 
 def extraire_quebec(chemin_source: str, chemin_sortie: str) -> int:
@@ -79,13 +106,20 @@ def nettoyer(df: pd.DataFrame) -> pd.DataFrame:
 class Variable(ABC):
     """Variable d'entrée du modèle (classe parente abstraite)."""
 
-    def __init__(self, nom: str) -> None:
+    def __init__(self, nom: str, etiquette: str | None = None) -> None:
+        """Reçoit le nom de la colonne et le texte à afficher (le nom par défaut)."""
         self._nom = nom
+        self._etiquette = etiquette if etiquette else nom
 
     @property
     def nom(self) -> str:
         """Nom de la colonne correspondante."""
         return self._nom
+
+    @property
+    def etiquette(self) -> str:
+        """Texte affiché à l'utilisateur (ex. « Année » pour year)."""
+        return self._etiquette
 
     @abstractmethod
     def valider(self, saisie: str):
@@ -102,45 +136,66 @@ class Variable(ABC):
 class VariableNumerique(Variable):
     """Variable numérique bornée par [minimum, maximum] (bornes incluses)."""
 
-    def __init__(self, nom: str, minimum: float, maximum: float) -> None:
-        """Échoue : ValueError si minimum > maximum."""
-        super().__init__(nom)
+    def __init__(self, nom: str, minimum: float, maximum: float,
+                 entier: bool = False, etiquette: str | None = None) -> None:
+        """`entier=True` refuse les nombres à virgule (ex. l'année).
+
+        Échoue : ValueError si minimum > maximum.
+        """
+        super().__init__(nom, etiquette)
         if minimum > maximum:
             raise ValueError(f"Pour {nom}, le minimum ({minimum}) dépasse le maximum ({maximum}).")
         self._minimum = float(minimum)
         self._maximum = float(maximum)
+        self._entier = entier
 
-    def valider(self, saisie: str) -> float:
-        """Renvoie la saisie convertie en float.
+    @property
+    def entier(self) -> bool:
+        """Vrai si seuls les nombres entiers sont acceptés."""
+        return self._entier
+
+    def valider(self, saisie: str) -> float | int:
+        """Renvoie la saisie convertie en nombre (int si la variable est entière).
 
         Accepte la virgule comme séparateur décimal (« 2,5 » donne 2.5).
-        Échoue : DonneeInvalideError si vide, non numérique ou hors intervalle.
+        Échoue : DonneeInvalideError si vide, non numérique, à virgule pour une
+                 variable entière, ou hors intervalle.
         """
         texte = saisie.strip().replace(",", ".")
         if texte == "":
-            raise DonneeInvalideError(f"Le champ « {self._nom} » est vide.")
+            raise DonneeInvalideError(f"Le champ « {self._etiquette} » est vide.")
         try:
             valeur = float(texte)
         except ValueError:
             raise DonneeInvalideError(
-                f"« {saisie} » n'est pas un nombre valide pour « {self._nom} ».") from None
+                f"« {saisie} » n'est pas un nombre valide pour « {self._etiquette} ».") from None
         # float() accepte aussi "nan" et "inf" : on les refuse
         if not math.isfinite(valeur):
-            raise DonneeInvalideError(f"« {saisie} » n'est pas un nombre valide pour « {self._nom} ».")
+            raise DonneeInvalideError(
+                f"« {saisie} » n'est pas un nombre valide pour « {self._etiquette} ».")
+        # is_integer() : Vrai pour 2015.0, Faux pour 2015.5
+        if self._entier and not valeur.is_integer():
+            raise DonneeInvalideError(f"« {self._etiquette} » doit être un nombre entier.")
         if not self._minimum <= valeur <= self._maximum:
             raise DonneeInvalideError(
-                f"« {self._nom} » doit être entre {self._minimum:g} et {self._maximum:g}.")
-        return valeur
+                f"« {self._etiquette} » doit être entre {self._minimum:g} et {self._maximum:g}.")
+        return int(valeur) if self._entier else valeur
 
     def vers_dict(self) -> dict:
-        """Renvoie {"type": "numerique", "min": ..., "max": ...}."""
-        return {"type": "numerique", "min": self._minimum, "max": self._maximum}
+        """Renvoie le format lu par l'interface :
+        {"nom", "etiquette", "type": "entier" ou "decimal", "minimum", "maximum"}.
+        """
+        if self._entier:
+            return {"nom": self._nom, "etiquette": self._etiquette, "type": "entier",
+                    "minimum": int(self._minimum), "maximum": int(self._maximum)}
+        return {"nom": self._nom, "etiquette": self._etiquette, "type": "decimal",
+                "minimum": self._minimum, "maximum": self._maximum}
 
     def __eq__(self, autre: object) -> bool:
         if not isinstance(autre, VariableNumerique):
             return NotImplemented
         return (self._nom == autre._nom and self._minimum == autre._minimum
-                and self._maximum == autre._maximum)
+                and self._maximum == autre._maximum and self._entier == autre._entier)
 
     def __repr__(self) -> str:
         return f"VariableNumerique({self._nom!r}, {self._minimum:g}, {self._maximum:g})"
@@ -149,9 +204,9 @@ class VariableNumerique(Variable):
 class VariableCategorielle(Variable):
     """Variable catégorielle dont les valeurs permises sont connues."""
 
-    def __init__(self, nom: str, valeurs: list[str]) -> None:
+    def __init__(self, nom: str, valeurs: list[str], etiquette: str | None = None) -> None:
         """Échoue : ValueError si la liste de valeurs est vide."""
-        super().__init__(nom)
+        super().__init__(nom, etiquette)
         if len(valeurs) == 0:
             raise ValueError(f"La liste de valeurs de {nom} est vide.")
         # set() retire les doublons, sorted() trie par ordre alphabétique
@@ -170,14 +225,18 @@ class VariableCategorielle(Variable):
         """
         texte = saisie.strip()
         if texte == "":
-            raise DonneeInvalideError(f"Veuillez choisir une valeur pour « {self._nom} ».")
+            raise DonneeInvalideError(f"Veuillez choisir une valeur pour « {self._etiquette} ».")
         if texte not in self._valeurs:
-            raise DonneeInvalideError(f"« {texte} » n'est pas une valeur permise pour « {self._nom} ».")
+            raise DonneeInvalideError(
+                f"« {texte} » n'est pas une valeur permise pour « {self._etiquette} ».")
         return texte
 
     def vers_dict(self) -> dict:
-        """Renvoie {"type": "categorielle", "valeurs": [...]}."""
-        return {"type": "categorielle", "valeurs": self.valeurs}
+        """Renvoie le format lu par l'interface :
+        {"nom", "etiquette", "type": "categorie", "choix": [...]}.
+        """
+        return {"nom": self._nom, "etiquette": self._etiquette, "type": "categorie",
+                "choix": self.valeurs}
 
     def __eq__(self, autre: object) -> bool:
         if not isinstance(autre, VariableCategorielle):
@@ -194,15 +253,42 @@ def creer_variables(df: pd.DataFrame) -> list[Variable]:
     Renvoie : une VariableNumerique (min/max observés) pour chaque colonne de
               COLONNES_NUMERIQUES, puis une VariableCategorielle (valeurs uniques)
               pour chaque colonne de COLONNES_CATEGORIELLES, dans cet ordre.
+              Les variables décrivent ce que l'utilisateur SAISIT : la colonne
+              miles a donc des bornes en kilomètres (arrondies à l'entier qui
+              englobe tout l'intervalle).
     """
     variables: list[Variable] = []
     for colonne in COLONNES_NUMERIQUES:
         # intervalle permis = plus petite et plus grande valeur vues dans les données
-        variables.append(VariableNumerique(colonne, df[colonne].min(), df[colonne].max()))
+        minimum, maximum = df[colonne].min(), df[colonne].max()
+        if colonne == "miles":
+            # floor / ceil : on arrondit vers l'extérieur pour ne refuser aucune valeur vue
+            minimum = math.floor(miles_vers_kilometres(minimum))
+            maximum = math.ceil(miles_vers_kilometres(maximum))
+        variables.append(VariableNumerique(colonne, minimum, maximum,
+                                           entier=colonne in COLONNES_ENTIERES,
+                                           etiquette=ETIQUETTES.get(colonne)))
     for colonne in COLONNES_CATEGORIELLES:
         # valeurs permises = valeurs différentes présentes dans la colonne
-        variables.append(VariableCategorielle(colonne, df[colonne].unique().tolist()))
+        variables.append(VariableCategorielle(colonne, df[colonne].unique().tolist(),
+                                              etiquette=ETIQUETTES.get(colonne)))
     return variables
+
+
+def variable_depuis_dict(description: dict) -> Variable:
+    """Reconstruit une Variable à partir de son vers_dict() (lu dans le JSON).
+
+    Échoue : ValueError si le type est inconnu.
+    """
+    genre = description["type"]
+    if genre in ("entier", "decimal"):
+        return VariableNumerique(description["nom"], description["minimum"],
+                                 description["maximum"], entier=genre == "entier",
+                                 etiquette=description.get("etiquette"))
+    if genre == "categorie":
+        return VariableCategorielle(description["nom"], description["choix"],
+                                    etiquette=description.get("etiquette"))
+    raise ValueError(f"Type de variable inconnu : {genre}")
 
 
 def construire_hierarchie(df: pd.DataFrame) -> dict[str, dict[str, list[str]]]:

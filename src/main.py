@@ -1,18 +1,36 @@
-import csv
-from pathlib import Path
+"""Point d'entrée de l'application.
+
+Lancement (depuis la racine du projet, après « python src/entrainer.py ») :
+    python src/main.py
+"""
+
+import os
+
+from application import Estimateur, Historique, creer_rappels
+from interface import lancer_interface
+from modele import ModeleLineaire, charger_metadonnees
+
+RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+CHEMIN_MODELE = os.path.join(RACINE, "modeles", "modele.joblib")
+CHEMIN_METADONNEES = os.path.join(RACINE, "modeles", "metadonnees.json")
+CHEMIN_HISTORIQUE = os.path.join(RACINE, "historique.json")
 
 
-if __package__:
-    from .interface import lancer_interface
-else:
-    from interface import lancer_interface
+def main() -> None:
+    """Charge le modèle et les métadonnées, puis ouvre la fenêtre."""
+    try:
+        modele = ModeleLineaire.charger(CHEMIN_MODELE)
+        metadonnees = charger_metadonnees(CHEMIN_METADONNEES)
+    except (FileNotFoundError, ValueError) as erreur:
+        print(f"Impossible de lancer l'application : {erreur}")
+        print("Entraînez d'abord le modèle avec : python src/entrainer.py")
+        return
 
-
-def _charger_catalogue():
-    chemin = Path(__file__).resolve().parents[1] / "donnees" / "ca-dealers-used-qc.csv"
-    with chemin.open(encoding="utf-8-sig", newline="") as fichier:
-        return list(csv.DictReader(fichier))
+    historique = Historique(CHEMIN_HISTORIQUE)
+    on_prediction, on_actualiser = creer_rappels(Estimateur(modele, metadonnees),
+                                                 historique, metadonnees["metriques"])
+    lancer_interface(metadonnees, on_prediction, on_actualiser, historique.lignes)
 
 
 if __name__ == "__main__":
-    lancer_interface(catalogue=_charger_catalogue())
+    main()

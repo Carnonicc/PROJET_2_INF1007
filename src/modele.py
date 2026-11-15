@@ -1,6 +1,5 @@
 """Entraînement, évaluation, sauvegarde et prédiction du prix.
 
-Squelette : les fonctions marquées NotImplementedError sont à compléter.
 Les tests de tests/test_modele.py décrivent le comportement attendu.
 """
 import os
@@ -18,10 +17,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 
 
-from exceptions import ModeleNonEntraineError  # noqa: F401  (à utiliser)
+from exceptions import ModeleNonEntraineError
 
 TOLERANCE = 2000.0
-VERSION_SCHEMA_METADONNEES = 2
+VERSION_SCHEMA_METADONNEES = 3   # 3 : "variables" devient une liste au format de l'interface
 
 
 def taux_a_tolerance(y_vrai: np.ndarray, y_predit: np.ndarray,
@@ -150,10 +149,8 @@ class ModeleLineaire(ModelePrix):
 
     def predire(self, X: pd.DataFrame) -> np.ndarray:
         if not self._entraine:
-            raise ModeleNonEntraineError
-        else:
-            self.pred = self._Pipeline.predict(X)
-            return self.pred
+            raise ModeleNonEntraineError("La régression linéaire n'est pas entraînée.")
+        return self._Pipeline.predict(X)
 
     def sauvegarder(self, chemin: str) -> None:
         """Sauvegarde le modèle avec joblib.
@@ -176,8 +173,8 @@ def sauvegarder_metadonnees(chemin: str, variables: list, metriques: dict[str, f
                             hierarchie: dict[str, dict[str, list[str]]]) -> None:
     """Écrit le JSON de métadonnées.
 
-    Format version 2 : {"version_schema": 2,
-              "variables": {nom: variable.vers_dict(), ...},
+    Format version 3 : {"version_schema": 3,
+              "variables": [variable.vers_dict(), ...]   (dans l'ordre d'affichage),
               "metriques": {...},
               "hierarchie": [{"marque": ..., "modeles": [
                   {"nom": ..., "versions": [...]}, ...]}, ...]}
@@ -188,7 +185,8 @@ def sauvegarder_metadonnees(chemin: str, variables: list, metriques: dict[str, f
     """
     metadonnees = {
         "version_schema": VERSION_SCHEMA_METADONNEES,
-        "variables": {variable.nom: variable.vers_dict() for variable in variables},
+        # une liste (et non un dict) : l'interface lit les champs dans cet ordre
+        "variables": [variable.vers_dict() for variable in variables],
         "metriques": metriques,
         "hierarchie": [
             {
@@ -216,7 +214,8 @@ def charger_metadonnees(chemin: str) -> dict:
     if version is None:
         return metadonnees
     if version != VERSION_SCHEMA_METADONNEES:
-        raise ValueError(f"Version de métadonnées non prise en charge : {version}")
+        raise ValueError(f"Version de métadonnées non prise en charge : {version}. "
+                         "Relancez « python src/entrainer.py ».")
 
     hierarchie = {}
     for entree_marque in metadonnees["hierarchie"]:

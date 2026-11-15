@@ -7,3 +7,7 @@ class DonneeInvalideError(Exception):
 
 class ModeleNonEntraineError(Exception):
     """Levée quand on demande une prédiction à un modèle qui n'a pas été entraîné."""
+
+
+class EstimationImpossibleError(Exception):
+    """Levée quand le modèle donne un prix impossible (nul ou négatif)."""

@@ -1,149 +1,81 @@
-from __future__ import annotations
+"""Fenêtre Tkinter de l'application.
 
-import math
-from typing import Any, Callable
+L'interface se construit entièrement à partir des métadonnées (JSON écrit par
+entrainer.py) : un champ par variable, les listes en cascade marque → modèle →
+version et le résumé de la qualité du modèle. Elle ne connaît pas le modèle :
+la prédiction est faite par la fonction `on_prediction` reçue en paramètre
+(voir application.creer_rappels).
+"""
+
 import tkinter as tk
 from tkinter import messagebox, ttk
+from typing import Callable
+
+from application import formater_prix, texte_metriques
+from exceptions import DonneeInvalideError, EstimationImpossibleError
+
+# champs en cascade : choisir l'un vide et recalcule ceux qui le suivent
+CASCADE = ["make", "model", "trim"]
 
 
-METADONNEES_DEMONSTRATION = {
-    "variables": [
-        {
-            "nom": "miles",
-            "etiquette": "Kilométrage (miles)",
-            "type": "entier",
-            "minimum": 0,
-            "maximum": 999999,
-        },
-        {
-            "nom": "year",
-            "etiquette": "Année",
-            "type": "entier",
-            "minimum": 1994,
-            "maximum": 2022,
-        },
-        {
-            "nom": "make",
-            "etiquette": "Marque",
-            "type": "categorie",
-            "choix": ["Acura", "Chevrolet", "Ford", "Honda", "Toyota"],
-        },
-        {
-            "nom": "model",
-            "etiquette": "Modèle",
-            "type": "categorie",
-            "choix": ["Civic", "F-150", "NSX", "RAV4"],
-        },
-        {
-            "nom": "trim",
-            "etiquette": "Version",
-            "type": "categorie",
-            "choix": ["Base", "EX", "Lariat", "XLT"],
-        },
-        {
-            "nom": "body_type",
-            "etiquette": "Type de carrosserie",
-            "type": "categorie",
-            "choix": ["Berline", "Coupé", "Hayon", "Camionnette"],
-        },
-        {
-            "nom": "drivetrain",
-            "etiquette": "Roues motrices",
-            "type": "categorie",
-            "choix": ["4WD", "FWD", "RWD"],
-        },
-        {
-            "nom": "transmission",
-            "etiquette": "Boîte de vitesses",
-            "type": "categorie",
-            "choix": ["Automatique", "Manuelle"],
-        },
-        {
-            "nom": "fuel_type",
-            "etiquette": "Type de carburant",
-            "type": "categorie",
-            "choix": ["Diesel", "Électrique", "Essence"],
-        },
-        {
-            "nom": "engine_size",
-            "etiquette": "Cylindrée",
-            "type": "decimal",
-            "minimum": 0.6,
-            "maximum": 8.3,
-        },
-        {
-            "nom": "engine_block",
-            "etiquette": "Configuration du moteur",
-            "type": "categorie",
-            "choix": ["H", "I", "V"],
-        },
-    ]
-}
+def options_cascade(hierarchie: dict[str, dict[str, list[str]]], nom: str,
+                    selection: dict[str, str]) -> list[str]:
+    """Renvoie les choix permis pour `model` ou `trim` selon la sélection actuelle.
+
+    Reçoit : la hiérarchie {marque: {modèle: [versions]}}, le nom du champ et
+             {nom: valeur choisie} pour les champs déjà remplis.
+    Renvoie : la liste triée (sans tenir compte des majuscules), vide si le champ
+              précédent n'est pas encore choisi.
+    """
+    modeles = hierarchie.get(selection.get("make", ""), {})
+    if nom == "model":
+        choix = list(modeles)
+    elif nom == "trim":
+        choix = modeles.get(selection.get("model", ""), [])
+    else:
+        raise ValueError(f"{nom} ne fait pas partie de la cascade.")
+    return sorted(choix, key=str.casefold)
 
 
-def _options_compatibles(
-    catalogue,
-    variable,
-    contraintes,
-):
-    valeurs = {
-        ligne[variable]
-        for ligne in catalogue
-        if ligne.get(variable)
-        and all(ligne.get(nom) == valeur for nom, valeur in contraintes.items())
-    }
-    return sorted(valeurs, key=str.casefold)
+def _formater_borne(valeur: float) -> str:
+    """Affiche une borne lisiblement : « 1 609 343 » pour un entier, « 0.6 » sinon.
 
-
-def _metadonnees_du_catalogue(
-    catalogue,
-):
-    variables = []
-    for definition in METADONNEES_DEMONSTRATION["variables"]:
-        variable = dict(definition)
-        nom = variable["nom"]
-        valeurs = [ligne[nom] for ligne in catalogue if ligne.get(nom)]
-        if variable["type"] == "categorie":
-            variable["choix"] = sorted(set(valeurs), key=str.casefold)
-        else:
-            bornes = [float(valeur) for valeur in valeurs]
-            variable["minimum"] = min(bornes)
-            variable["maximum"] = max(bornes)
-        variables.append(variable)
-    return {"variables": variables}
+    (Le format :g donnerait « 1.60934e+06 » pour les grands nombres.)
+    """
+    if float(valeur).is_integer():
+        return f"{int(valeur):,}".replace(",", " ")
+    return f"{valeur:g}"
 
 
 class InterfaceUtilisateur(ttk.Frame):
-    def __init__(
-        self,
-        parent,
-        metadonnees,
-        on_prediction=None ,
-        on_actualiser_historique=None,
-        catalogue= None,
-    ):
+    """Contenu de la fenêtre : onglet d'estimation et onglet d'historique."""
+
+    def __init__(self, parent: tk.Misc, metadonnees: dict,
+                 on_prediction: Callable | None = None,
+                 on_actualiser_historique: Callable | None = None) -> None:
+        """Reçoit la fenêtre parente, les métadonnées et les deux fonctions de rappel.
+
+        on_prediction(interface, saisies) : appelée par le bouton « Prédire » ;
+        on_actualiser_historique(interface) : appelée par « Actualiser l'historique ».
+        """
         super().__init__(parent, padding=10)
         self.metadonnees = metadonnees
+        self.hierarchie = metadonnees.get("hierarchie", {})
         self.on_prediction = on_prediction
         self.on_actualiser_historique = on_actualiser_historique
-        self.catalogue = catalogue or []
-        self.champs_categoriels= {}
-        self.annees_disponibles = {
-            ligne["year"] for ligne in self.catalogue if ligne.get("year")
-        }
-        self.champs = {}
-        self.lignes_historique = []
+        self.champs: dict[str, ttk.Entry | ttk.Combobox] = {}
+        self.champs_categoriels: dict[str, ttk.Combobox] = {}
+        self.lignes_historique: list[dict] = []
         self.pack(fill="both", expand=True)
         self._construire_fenetre()
 
-    def _construire_fenetre(self):
+    def _construire_fenetre(self) -> None:
+        """Crée l'avertissement, les deux onglets et leur contenu."""
         avertissement = ttk.Label(
             self,
-            text=(
-                "Avertissement pédagogique : les estimations sont un exercice "
-                "et ne constituent pas un conseil financier ni une aide à la "
-                "décision d’achat."
-            ),
+            text=("Avertissement pédagogique : les estimations sont un exercice "
+                  "et ne constituent pas un conseil financier ni une aide à la "
+                  "décision d’achat."),
             wraplength=1200,
             justify="center",
             padding=(8, 6),
@@ -163,73 +95,43 @@ class InterfaceUtilisateur(ttk.Frame):
         contenu.columnconfigure(1, weight=1)
         contenu.rowconfigure(0, weight=1)
 
-        panneau_saisie = ttk.LabelFrame(
-            contenu,
-            text="Caractéristiques du véhicule",
-            padding=12,
-        )
+        panneau_saisie = ttk.LabelFrame(contenu, text="Caractéristiques du véhicule",
+                                        padding=12)
         panneau_saisie.grid(row=0, column=0, sticky="nsew", padx=(0, 8))
         panneau_saisie.columnconfigure(0, weight=1)
         panneau_saisie.columnconfigure(1, weight=1)
         panneau_saisie.rowconfigure(0, weight=1)
 
         conteneur_champs = ttk.Frame(panneau_saisie)
-        conteneur_champs.grid(
-            row=0,
-            column=0,
-            columnspan=2,
-            sticky="nsew",
-        )
+        conteneur_champs.grid(row=0, column=0, columnspan=2, sticky="nsew")
         conteneur_champs.columnconfigure(0, weight=1)
         conteneur_champs.columnconfigure(1, weight=1)
         self._construire_champs(conteneur_champs)
 
-        self.statut = tk.StringVar(value="Prêt à recevoir les caractéristiques.")
-        ttk.Button(
-            panneau_saisie,
-            text="Prédire",
-            command=self._demander_prediction,
-        ).grid(row=1, column=0, columnspan=2, sticky="ew", pady=(10, 4))
-        ttk.Label(
-            panneau_saisie,
-            textvariable=self.statut,
-            wraplength=500,
-            justify="left",
-        ).grid(row=2, column=0, columnspan=2, sticky="ew", pady=(4, 0))
+        self.statut = tk.StringVar(value="Remplissez les caractéristiques puis cliquez sur « Prédire ».")
+        ttk.Button(panneau_saisie, text="Prédire", command=self._demander_prediction
+                   ).grid(row=1, column=0, columnspan=2, sticky="ew", pady=(10, 4))
+        ttk.Label(panneau_saisie, textvariable=self.statut, wraplength=500, justify="left"
+                  ).grid(row=2, column=0, columnspan=2, sticky="ew", pady=(4, 0))
 
         panneau_resultat = ttk.Frame(contenu, padding=8)
         panneau_resultat.grid(row=0, column=1, sticky="nsew", padx=(8, 0))
         panneau_resultat.columnconfigure(0, weight=1)
-        panneau_resultat.rowconfigure(2, weight=1)
-        self.resultat = tk.StringVar(
-            value="Le résultat de la prédiction apparaîtra ici."
-        )
-        ttk.Label(
-            panneau_resultat,
-            textvariable=self.resultat,
-            wraplength=560,
-            justify="left",
-            padding=10,
-        ).grid(row=0, column=0, sticky="ew")
+        self.resultat = tk.StringVar(value="Le résultat de la prédiction apparaîtra ici.")
+        ttk.Label(panneau_resultat, textvariable=self.resultat, wraplength=560,
+                  justify="left", padding=10, font=("TkDefaultFont", 16, "bold")
+                  ).grid(row=0, column=0, sticky="ew")
 
-        ttk.Label(
-            panneau_resultat,
-            text="Score R² du modèle (multiplié par 100)",
-            padding=10,
-        ).grid(row=1, column=0, sticky="s")
-        self.score_r2 = tk.StringVar(
-            value="Non disponible (modèle non entraîné)"
-        )
-        ttk.Label(
-            panneau_resultat,
-            textvariable=self.score_r2,
-            font=("TkDefaultFont", 24, "bold"),
-            padding=10,
-        ).grid(row=2, column=0, sticky="nsew")
+        qualite = ttk.LabelFrame(panneau_resultat, text="Qualité du modèle (voitures de test)",
+                                 padding=10)
+        qualite.grid(row=1, column=0, sticky="ew", pady=(20, 0))
+        ttk.Label(qualite, text=texte_metriques(self.metadonnees.get("metriques", {})),
+                  justify="left").grid(row=0, column=0, sticky="w")
 
         self._construire_historique(page_historique)
 
-    def _construire_champs(self, parent: ttk.Frame):
+    def _construire_champs(self, parent: ttk.Frame) -> None:
+        """Crée un champ par variable : liste déroulante ou zone de texte."""
         for index, variable in enumerate(self.metadonnees["variables"]):
             colonne = index // 6
             ligne = index % 6
@@ -238,86 +140,42 @@ class InterfaceUtilisateur(ttk.Frame):
             cellule.columnconfigure(0, weight=1)
 
             etiquette = variable["etiquette"]
+            nom = variable["nom"]
             if variable["type"] == "categorie":
-                champ: ttk.Entry | ttk.Combobox = ttk.Combobox(
-                    cellule,
-                    values=variable["choix"],
-                    state="readonly",
-                    width=30,
-                )
-                self.champs_categoriels[variable["nom"]] = champ
-                champ.bind(
-                    "<<ComboboxSelected>>",
-                    lambda event, nom=variable["nom"]: self._traiter_selection(
-                        event,
-                        nom,
-                    ),
-                )
+                # modèle et version restent vides tant que le champ précédent n'est pas choisi
+                choix = [] if nom in CASCADE[1:] else variable["choix"]
+                champ = ttk.Combobox(cellule, values=choix, state="readonly", width=30)
+                self.champs_categoriels[nom] = champ
+                if nom in CASCADE:
+                    champ.bind("<<ComboboxSelected>>",
+                               lambda evenement, nom=nom: self._actualiser_choix(nom))
             else:
-                minimum = variable.get("minimum")
-                maximum = variable.get("maximum")
-                if minimum is not None and maximum is not None:
-                    etiquette = f"{etiquette} ({minimum:g} à {maximum:g})"
+                etiquette = (f"{etiquette} ({_formater_borne(variable['minimum'])} à "
+                             f"{_formater_borne(variable['maximum'])})")
                 champ = ttk.Entry(cellule, width=32)
-                if variable["nom"] == "year":
-                    champ.bind(
-                        "<FocusOut>",
-                        lambda event: self._traiter_selection(event, "year"),
-                    )
 
-            ttk.Label(cellule, text=etiquette).grid(
-                row=0,
-                column=0,
-                sticky="w",
-            )
+            ttk.Label(cellule, text=etiquette).grid(row=0, column=0, sticky="w")
             champ.grid(row=1, column=0, sticky="ew", pady=(3, 0))
-            self.champs[variable["nom"]] = champ
+            self.champs[nom] = champ
 
-    def _traiter_selection(self, evenement, variable_modifiee):
-        del evenement
-        self._actualiser_choix(variable_modifiee)
-
-    def _actualiser_choix(self, variable_modifiee):
-        if not self.catalogue:
-            return
-
-        noms = list(self.champs_categoriels)
-        if variable_modifiee == "year":
-            for champ in self.champs_categoriels.values():
-                champ.set("")
-        elif variable_modifiee in self.champs_categoriels:
-            position = noms.index(variable_modifiee)
-            for nom in noms[position + 1:]:
-                self.champs_categoriels[nom].set("")
-
-        contraintes = {}
-        champ_annee = self.champs.get("year")
-        if champ_annee is not None:
-            annee = champ_annee.get()
-            if annee in self.annees_disponibles:
-                contraintes["year"] = annee
-
-        for nom in noms:
+    def _actualiser_choix(self, variable_modifiee: str) -> None:
+        """Après un choix dans la cascade, vide les champs suivants et recalcule leurs choix."""
+        position = CASCADE.index(variable_modifiee)
+        for nom in CASCADE[position + 1:]:
+            if nom not in self.champs_categoriels:
+                continue
             champ = self.champs_categoriels[nom]
-            champ.configure(
-                values=_options_compatibles(
-                    self.catalogue,
-                    nom,
-                    contraintes,
-                )
-            )
-            if champ.get():
-                contraintes[nom] = champ.get()
+            champ.set("")
+            selection = {n: self.champs_categoriels[n].get()
+                         for n in CASCADE if n in self.champs_categoriels}
+            champ.configure(values=options_cascade(self.hierarchie, nom, selection))
 
-    def _construire_historique(self, parent: ttk.Frame):
+    def _construire_historique(self, parent: ttk.Frame) -> None:
+        """Crée le tableau des estimations, la zone de détails et le bouton."""
         parent.rowconfigure(0, weight=1)
         parent.columnconfigure(0, weight=1)
-        self.tableau = ttk.Treeview(
-            parent,
-            columns=("date", "prix", "vehicule"),
-            show="headings",
-            height=16,
-        )
+        self.tableau = ttk.Treeview(parent, columns=("date", "prix", "vehicule"),
+                                    show="headings", height=16)
         self.tableau.heading("date", text="Date et heure")
         self.tableau.heading("prix", text="Prix estimé")
         self.tableau.heading("vehicule", text="Véhicule")
@@ -325,129 +183,93 @@ class InterfaceUtilisateur(ttk.Frame):
         self.tableau.column("prix", width=140, anchor="e")
         self.tableau.column("vehicule", width=420, anchor="w")
 
-        barre_defilement = ttk.Scrollbar(
-            parent,
-            orient="vertical",
-            command=self.tableau.yview,
-        )
+        barre_defilement = ttk.Scrollbar(parent, orient="vertical",
+                                         command=self.tableau.yview)
         self.tableau.configure(yscrollcommand=barre_defilement.set)
         self.tableau.grid(row=0, column=0, sticky="nsew")
         barre_defilement.grid(row=0, column=1, sticky="ns")
         self.tableau.bind("<<TreeviewSelect>>", self._afficher_details)
 
-        self.details_historique = tk.Text(
-            parent,
-            height=7,
-            wrap="word",
-            state="disabled",
-        )
-        self.details_historique.grid(
-            row=1,
-            column=0,
-            columnspan=2,
-            sticky="ew",
-            pady=(10, 0),
-        )
-        ttk.Button(
-            parent,
-            text="Actualiser l’historique",
-            command=self._demander_actualisation,
-        ).grid(row=2, column=0, sticky="w", pady=(8, 0))
+        self.details_historique = tk.Text(parent, height=7, wrap="word", state="disabled")
+        self.details_historique.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(10, 0))
+        ttk.Button(parent, text="Actualiser l’historique",
+                   command=self._demander_actualisation
+                   ).grid(row=2, column=0, sticky="w", pady=(8, 0))
 
-    def _demander_prediction(self):
+    def _demander_prediction(self) -> None:
+        """Bouton « Prédire » : envoie les saisies à on_prediction et affiche les erreurs."""
         if self.on_prediction is None:
-            self.statut.set("Le traitement du modèle sera branché par le collaborateur.")
+            self.statut.set("Aucun modèle n'est branché à l'interface.")
             return
 
         saisies = {nom: champ.get() for nom, champ in self.champs.items()}
         try:
             self.on_prediction(self, saisies)
-        except ValueError as erreur:
-            messagebox.showwarning(
-                "Vérifiez les caractéristiques",
-                str(erreur),
-                parent=self.winfo_toplevel(),
-            )
+        except (DonneeInvalideError, ValueError) as erreur:
+            messagebox.showwarning("Vérifiez les caractéristiques", str(erreur),
+                                   parent=self.winfo_toplevel())
+        except EstimationImpossibleError as erreur:
+            self.afficher_resultat(str(erreur))
+        except OSError as erreur:
+            # idée d'Avery : le prix est affiché, seule la sauvegarde a échoué
+            self.statut.set("Prix calculé, mais l'historique n'a pas pu être sauvegardé.")
+            messagebox.showerror("Historique non sauvegardé", str(erreur),
+                                 parent=self.winfo_toplevel())
+        else:
+            self.statut.set("Estimation ajoutée à l'historique.")
 
-    def _demander_actualisation(self):
+    def _demander_actualisation(self) -> None:
+        """Bouton « Actualiser l'historique »."""
         if self.on_actualiser_historique is None:
-            self.statut.set("L’historique sera fourni par le traitement du modèle.")
+            self.statut.set("Aucun historique n'est branché à l'interface.")
             return
         self.on_actualiser_historique(self)
 
-    def _afficher_details(self, _evenement= None):
-        del _evenement
+    def _afficher_details(self, _evenement: tk.Event | None = None) -> None:
+        """Affiche toutes les caractéristiques de l'estimation choisie dans le tableau."""
         selection = self.tableau.selection()
         if not selection:
             return
         index = int(selection[0])
+        # le tableau montre la plus récente en premier : on inverse l'indice
         ligne = self.lignes_historique[len(self.lignes_historique) - 1 - index]
-        etiquettes = {
-            variable["nom"]: variable["etiquette"]
-            for variable in self.metadonnees["variables"]
-        }
-        details = "\n".join(
-            f"{etiquettes.get(nom, nom)} : {valeur}"
-            for nom, valeur in ligne.get("caracteristiques", {}).items()
-        )
+        etiquettes = {variable["nom"]: variable["etiquette"]
+                      for variable in self.metadonnees["variables"]}
+        details = "\n".join(f"{etiquettes.get(nom, nom)} : {valeur}"
+                            for nom, valeur in ligne.get("caracteristiques", {}).items())
         self.details_historique.configure(state="normal")
         self.details_historique.delete("1.0", "end")
         self.details_historique.insert("1.0", details)
         self.details_historique.configure(state="disabled")
 
-    def afficher_resultat(self, texte):
+    def afficher_resultat(self, texte: str) -> None:
+        """Affiche un texte dans la zone de résultat."""
         self.resultat.set(texte)
 
-    def afficher_score_r2(self, score_r2):
-        if not math.isfinite(score_r2):
-            raise ValueError("Le score R² doit être un nombre fini.")
-        self.score_r2.set(f"{score_r2 * 100:.1f} %")
-
-    def afficher_historique(self, lignes):
+    def afficher_historique(self, lignes: list[dict]) -> None:
+        """Remplace le contenu du tableau par `lignes` (la plus récente en haut)."""
         self.lignes_historique = lignes
         for identifiant in self.tableau.get_children():
             self.tableau.delete(identifiant)
         for index, ligne in enumerate(reversed(lignes)):
             caracteristiques = ligne.get("caracteristiques", {})
-            vehicule = " ".join(
-                str(caracteristiques.get(cle, ""))
-                for cle in ("year", "make", "model")
-            ).strip()
-            self.tableau.insert(
-                "",
-                "end",
-                iid=str(index),
-                values=(
-                    ligne.get("date_heure", ""),
-                    ligne.get("prix_estime", ""),
-                    vehicule,
-                ),
-            )
+            vehicule = " ".join(str(caracteristiques.get(cle, ""))
+                                for cle in ("year", "make", "model", "trim")).strip()
+            self.tableau.insert("", "end", iid=str(index),
+                                values=(ligne.get("date_heure", ""),
+                                        formater_prix(ligne.get("prix_estime", 0)),
+                                        vehicule))
 
-def lancer_interface(
-    metadonnees= None,
-    on_prediction=None,
-    on_actualiser_historique= None,
-    catalogue= None,
-):
-    if catalogue is not None and not catalogue:
-        raise ValueError("Le catalogue de véhicules est vide.")
-    if metadonnees is None:
-        metadonnees = (
-            _metadonnees_du_catalogue(catalogue)
-            if catalogue is not None
-            else METADONNEES_DEMONSTRATION
-        )
 
+def lancer_interface(metadonnees: dict, on_prediction: Callable | None = None,
+                     on_actualiser_historique: Callable | None = None,
+                     lignes_historique: list[dict] | None = None) -> None:
+    """Ouvre la fenêtre et attend que l'utilisateur la ferme."""
     fenetre = tk.Tk()
     fenetre.title("Estimation du prix d’une voiture d’occasion")
     fenetre.geometry("1250x820")
     fenetre.minsize(1000, 700)
-    InterfaceUtilisateur(
-        fenetre,
-        metadonnees,
-        on_prediction,
-        on_actualiser_historique,
-        catalogue,
-    )
+    interface = InterfaceUtilisateur(fenetre, metadonnees, on_prediction,
+                                     on_actualiser_historique)
+    interface.afficher_historique(lignes_historique or [])
     fenetre.mainloop()

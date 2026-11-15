@@ -185,15 +185,15 @@ def test_metadonnees_aller_retour(tmp_path):
     assert meta["hierarchie"] == hierarchie
     with open(chemin, encoding="utf-8") as fichier:
         fichier_json = json.load(fichier)
-    assert fichier_json["version_schema"] == 2
+    assert fichier_json["version_schema"] == 3
     assert fichier_json["hierarchie"] == [
         {"marque": "Acura", "modeles": [
             {"nom": "MDX", "versions": ["Base", "Tech"]}]},
         {"marque": "Toyota", "modeles": [
             {"nom": "Corolla", "versions": ["LE"]}]},
     ]
-    assert meta["variables"]["year"] == {"type": "numerique", "min": 2000, "max": 2022}
-    assert meta["variables"]["make"] == {"type": "categorielle", "valeurs": ["Acura", "Toyota"]}
+    # une liste, dans l'ordre des variables reçues (format lu par l'interface)
+    assert meta["variables"] == [variable.vers_dict() for variable in variables]
     assert meta["metriques"]["mae"] == pytest.approx(3456.7)
 
 

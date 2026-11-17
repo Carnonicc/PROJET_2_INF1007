@@ -160,6 +160,18 @@ def test_historique_sauvegarde_et_relit(tmp_path):
     assert relu.lignes[0]["caracteristiques"] == {"make": "Honda"}
 
 
+@pytest.mark.parametrize("contenu, message", [
+    ("{pas du json", "abîmé"),
+    ('{"date_heure": "2026-11-14"}', "liste"),
+])
+def test_historique_fichier_abime(tmp_path, contenu, message):
+    chemin = os.path.join(tmp_path, "historique.json")
+    with open(chemin, "w", encoding="utf-8") as f:
+        f.write(contenu)
+    with pytest.raises(ValueError, match=message):
+        Historique(chemin)
+
+
 def test_historique_fichier_absent_commence_vide(tmp_path):
     assert len(Historique(os.path.join(tmp_path, "absent.json"))) == 0
 

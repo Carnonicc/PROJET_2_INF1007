@@ -19,6 +19,11 @@ COLONNES_CATEGORIELLES = ["make", "model", "trim", "body_type", "drivetrain",
 COLONNES = [CIBLE] + COLONNES_NUMERIQUES + COLONNES_CATEGORIELLES
 # colonnes numériques qui n'acceptent que des nombres entiers (engine_size est décimal)
 COLONNES_ENTIERES = ["miles", "year"]
+# règles de nettoyage (décidées en équipe, voir DECISIONS.md)
+PRIX_MAXIMUM = 100_000           # au-delà : voitures de luxe qui faussent la droite
+MILES_MAXIMUM = 250_000          # ≈ 402 000 km ; au-delà : erreurs de saisie (ex. 999 999)
+MINIMUM_ANNONCES_MARQUE = 10     # trop peu d'exemples pour apprendre le prix d'une marque
+COLONNES_HARMONISEES = ["model", "trim"]   # « E-Pace »/« E-PACE » : une seule valeur
 # le CSV et le modèle sont en miles, mais l'utilisateur saisit des kilomètres
 KILOMETRES_PAR_MILE = 1.609344
 # texte affiché à l'utilisateur pour chaque colonne (interface et messages d'erreur)
@@ -85,21 +90,52 @@ def charger_csv(chemin: str) -> pd.DataFrame:
 
 
 
-def nettoyer(df: pd.DataFrame) -> pd.DataFrame:
+def harmoniser_majuscules(serie: pd.Series) -> pd.Series:
+    """Regroupe les écritures qui ne diffèrent que par les majuscules.
+
+    Chaque valeur est remplacée par l'écriture la plus fréquente de son groupe
+    (à égalité : la première dans l'ordre alphabétique, pour un résultat stable).
+    Ex. : 3 « Base » et 1 « base » donnent 4 « Base ».
+    Reçoit : une colonne de texte. Renvoie : une nouvelle colonne.
+    """
+    frequences = serie.value_counts()
+    # tri : la plus fréquente d'abord, puis ordre alphabétique
+    ordre = sorted(frequences.items(), key=lambda paire: (-paire[1], paire[0]))
+    ecriture = {}
+    for valeur, _ in ordre:
+        # setdefault : seule la PREMIÈRE écriture rencontrée (la plus fréquente) est gardée
+        ecriture.setdefault(valeur.casefold(), valeur)
+    return serie.map(lambda valeur: ecriture[valeur.casefold()])
+
+
+def nettoyer(df: pd.DataFrame,
+             minimum_annonces: int = MINIMUM_ANNONCES_MARQUE) -> pd.DataFrame:
     """Nettoie les données sans modifier le DataFrame reçu.
 
     Retire : les lignes avec une valeur manquante dans COLONNES,
-             les prix <= 0, le kilométrage (miles) négatif.
-    Reçoit : un DataFrame brut.
+             les prix <= 0 ou > PRIX_MAXIMUM,
+             les valeurs numériques négatives et les miles > MILES_MAXIMUM,
+             les marques qui ont moins de `minimum_annonces` annonces.
+    Harmonise : les majuscules des colonnes COLONNES_HARMONISEES.
+    Reçoit : un DataFrame brut (et le minimum d'annonces par marque).
     Renvoie : un nouveau DataFrame nettoyé (index réinitialisé).
     """
     # 1. lignes complètes : dropna renvoie un NOUVEAU DataFrame, df n'est pas modifié
     propre = df.dropna(subset=COLONNES)
-    # 2. valeurs impossibles : on garde les prix > 0 et les colonnes numériques >= 0
+    # 2. valeurs impossibles ou extrêmes (bornes incluses : 100 000 $ est gardé)
     #    .all(axis=1) : Vrai si TOUTES les colonnes numériques de la ligne sont >= 0
-    valide = (propre[CIBLE] > 0) & (propre[COLONNES_NUMERIQUES] >= 0).all(axis=1)
-    propre = propre[valide]
-    # 3. index renuméroté 0, 1, 2... (sinon il garde des « trous »)
+    valide = ((propre[CIBLE] > 0) & (propre[CIBLE] <= PRIX_MAXIMUM)
+              & (propre[COLONNES_NUMERIQUES] >= 0).all(axis=1)
+              & (propre["miles"] <= MILES_MAXIMUM))
+    propre = propre[valide].copy()     # copie : on va modifier des colonnes
+    # 3. une seule écriture par modèle et par version
+    for colonne in COLONNES_HARMONISEES:
+        propre[colonne] = harmoniser_majuscules(propre[colonne])
+    # 4. marques rares, comptées APRÈS les autres filtres
+    #    transform("size") : pour chaque ligne, le nombre d'annonces de sa marque
+    nombre = propre.groupby("make")["make"].transform("size")
+    propre = propre[nombre >= minimum_annonces]
+    # 5. index renuméroté 0, 1, 2... (sinon il garde des « trous »)
     return propre.reset_index(drop=True)
 
 

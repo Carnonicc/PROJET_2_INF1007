@@ -6,7 +6,7 @@
       "etiquette": "Kilométrage (km)",
       "type": "entier",
       "minimum": 0,
-      "maximum": 1609343
+      "maximum": 402336
     },
     {
       "nom": "year",
@@ -29,46 +29,35 @@
       "choix": [
         "Acura",
         "Alfa Romeo",
-        "Aston Martin",
         "Audi",
         "BMW",
-        "Bentley",
         "Buick",
         "Cadillac",
         "Chevrolet",
         "Chrysler",
         "Dodge",
         "FIAT",
-        "Ferrari",
         "Ford",
         "GENESIS",
         "GMC",
         "Honda",
-        "Hummer",
         "Hyundai",
         "INFINITI",
         "Jaguar",
         "Jeep",
-        "KARMA",
         "Kia",
-        "Lamborghini",
         "Land Rover",
         "Lexus",
         "Lincoln",
-        "Lotus",
         "MINI",
         "Maserati",
         "Mazda",
-        "McLaren",
         "Mercedes-Benz",
         "Mitsubishi",
         "Nissan",
-        "Plymouth",
         "Pontiac",
         "Porsche",
         "RAM",
-        "Rolls-Royce",
-        "Saab",
         "Saturn",
         "Scion",
         "Subaru",
@@ -86,21 +75,15 @@
       "choix": [
         "1 Series",
         "124 Spider",
-        "12C",
         "2 Series",
         "200",
         "3 Series",
-        "3-Sep",
         "300",
         "350Z Roadster",
-        "360",
         "370Z",
         "370Z Coupe",
         "370Z Roadster",
         "4 Series",
-        "458 Italia",
-        "488",
-        "488 GTB",
         "4C",
         "4Runner",
         "5 Series",
@@ -108,20 +91,13 @@
         "500L",
         "500X",
         "500c",
-        "570GT",
-        "599",
         "6 Series",
         "6 Series Convertible",
         "6 Series Gran Coupe",
         "6 Series Gran Turismo",
-        "612",
-        "650S",
-        "675LT",
         "7 Series",
         "718",
-        "720S",
-        "8 Series",
-        "812",
+        "86",
         "911",
         "A-Class",
         "A3",
@@ -134,21 +110,18 @@
         "A5 Sportback",
         "A6",
         "A7",
-        "AMG GT Coupe",
-        "AMG GT Roadster",
-        "AMG? GT",
-        "AMGA GT 4-Door Coupe",
+        "A8",
         "ATS",
         "ATS Coupe",
         "ATS Sedan",
         "Acadia",
         "Accent",
         "Accord",
-        "Accord Crosstour",
         "All-New Compass",
         "All-New Wrangler",
         "All-New Wrangler Unlimited",
         "Altima",
+        "Altima Coupe",
         "Altima Sedan",
         "Armada",
         "Arteon",
@@ -198,8 +171,6 @@
         "CX-9",
         "Cadenza",
         "Caliber",
-        "California",
-        "California T",
         "Camaro",
         "Camry",
         "Camry Solara",
@@ -209,10 +180,10 @@
         "Cayenne",
         "Cayenne Coupe",
         "Cayman",
+        "Century",
         "Challenger",
         "Charger",
         "Cherokee",
-        "Cirrus",
         "City Express",
         "Civic",
         "Civic Hatchback",
@@ -222,8 +193,6 @@
         "Colorado",
         "Compass",
         "Continental",
-        "Continental GT",
-        "Continental GTC",
         "Convertible",
         "Cooper",
         "Corolla",
@@ -236,18 +205,13 @@
         "Crosstrek",
         "Cruze",
         "Cruze Limited",
-        "Cullinan",
-        "DB11",
-        "DB9",
         "Dakota",
         "Dart",
-        "Dawn",
         "Discovery",
         "Discovery Sport",
         "Durango",
         "E-Class",
         "E-PACE",
-        "E-Pace",
         "E-Series Cutaway",
         "E-Series Econoline Van",
         "ES",
@@ -257,7 +221,6 @@
         "Eclipse",
         "Eclipse Cross",
         "Eclipse Spyder",
-        "EcoSport",
         "Ecosport",
         "Edge",
         "Elantra",
@@ -274,7 +237,6 @@
         "Escalade",
         "Escalade ESV",
         "Escape",
-        "Evora",
         "Expedition",
         "Explorer",
         "Explorer Sport Trac",
@@ -285,18 +247,10 @@
         "F-150",
         "F-250 Super Duty",
         "F-350 Super Duty",
-        "F-350 Super Duty Chassis Cab",
-        "F-450 Super Duty",
         "F-550 Super Duty Chassis Cab",
-        "F-PACE",
         "F-Pace",
         "F-TYPE",
-        "F-Type",
-        "F12berlinetta",
-        "F430",
-        "F8",
-        "FF",
-        "FORTE",
+        "FJ Cruiser",
         "FR-S",
         "FX",
         "FX35",
@@ -304,12 +258,12 @@
         "Fit",
         "Five Hundred",
         "Flex",
-        "Flying Spur",
         "Focus",
         "Forester",
         "Forte",
         "Forte Koup",
         "Forte5",
+        "Freestyle",
         "Frontier",
         "Fusion",
         "Fusion Energi",
@@ -317,9 +271,9 @@
         "G Sedan",
         "G-Class",
         "G35",
-        "G5",
         "G6",
         "G70",
+        "G80",
         "G90",
         "GL-Class",
         "GLA",
@@ -338,11 +292,9 @@
         "GT-R",
         "GTI",
         "GX",
-        "Gallardo",
         "Genesis",
         "Genesis Coupe",
         "Ghibli",
-        "Ghost",
         "Giulia",
         "Gladiator",
         "Golf",
@@ -353,16 +305,12 @@
         "GranTurismo",
         "Grand Caravan",
         "Grand Cherokee",
-        "Grand Prix",
         "Grand Vitara",
-        "H3",
         "HHR",
         "HR-V",
         "Hardtop 2 Door",
         "Hardtop 4 Door",
         "Highlander",
-        "Huracan",
-        "I3",
         "ILX",
         "ION",
         "IONIQ",
@@ -370,13 +318,11 @@
         "Impala",
         "Impreza",
         "Insight",
-        "Ioniq",
         "JUKE",
         "JX",
         "Jetta",
         "Jetta SportWagen",
         "Journey",
-        "Juke",
         "K5",
         "Kicks",
         "Kizashi",
@@ -397,7 +343,6 @@
         "M4 Convertible",
         "M4 Coupe",
         "M5",
-        "MAZDA3",
         "MAZDA5",
         "MAZDA6",
         "MDX",
@@ -407,7 +352,6 @@
         "MKT",
         "MKX",
         "MKZ",
-        "MR2 Spyder",
         "MX-5 Miata",
         "MX-5 Miata RF",
         "Macan",
@@ -417,18 +361,17 @@
         "Maxima",
         "Mazda2",
         "Mazda3",
-        "Mazda6",
         "Mirage",
         "Mirage G4",
         "Murano",
         "Mustang",
-        "NSX",
         "NV Cargo",
         "NV200",
         "NX",
         "NX Hybrid",
         "Nautilus",
         "Navigator",
+        "New Beetle",
         "New Jetta",
         "New Optima",
         "Niro",
@@ -447,11 +390,8 @@
         "Passport",
         "Pathfinder",
         "Patriot",
-        "Phantom",
         "Pilot",
-        "Portofino",
         "Prius",
-        "Prius C",
         "Prius Plug-In",
         "Prius Prime",
         "Prius c",
@@ -459,7 +399,6 @@
         "ProMaster Cab Chassis",
         "ProMaster Cargo Van",
         "Promaster City",
-        "Prowler",
         "Q3",
         "Q5",
         "Q50",
@@ -467,7 +406,6 @@
         "Q7",
         "Q70L",
         "Q8",
-        "QX",
         "QX30",
         "QX50",
         "QX60",
@@ -475,11 +413,9 @@
         "QX80",
         "Quattroporte",
         "Quest",
-        "R8",
         "RAV4",
         "RC",
         "RDX",
-        "RIO",
         "RLX",
         "RS 3",
         "RS 7",
@@ -493,18 +429,15 @@
         "Ram 3500 Pickup",
         "Ram 5500 Chassis Cab",
         "Ram SRT-10",
-        "Range Rover",
         "Range Rover Evoque",
         "Range Rover Sport",
         "Range Rover Velar",
         "Ranger",
-        "Rapide",
-        "Rav4",
         "Regal",
         "Regal Sportback",
         "Regal TourX",
+        "Rendezvous",
         "Renegade",
-        "Revero",
         "Ridgeline",
         "Rio",
         "Rio 5-Door",
@@ -515,7 +448,6 @@
         "S-Class",
         "S3",
         "S4",
-        "S40",
         "S5",
         "S5 Cabriolet",
         "S5 Coupe",
@@ -524,13 +456,13 @@
         "S60",
         "S7",
         "S8",
+        "S80",
         "S90",
         "SC",
         "SL Roadster",
         "SL-Class",
         "SLC Roadster",
         "SLK-Class",
-        "SLR McLaren",
         "SQ5",
         "SRX",
         "SX4 Crossover",
@@ -551,11 +483,8 @@
         "Sierra 1500 Denali",
         "Sierra 1500 Limited",
         "Sierra 2500HD",
-        "Sierra 3500",
         "Sierra 3500 Denali HD",
         "Sierra 3500HD",
-        "Sierra Classic 2500HD",
-        "Silverado",
         "Silverado 1500",
         "Silverado 1500 LD",
         "Silverado 2500HD",
@@ -583,6 +512,7 @@
         "TLX",
         "TSX",
         "TT",
+        "TT Coupe",
         "TT RS",
         "TTS",
         "Tacoma",
@@ -615,15 +545,12 @@
         "UX",
         "UX Hybrid",
         "Uplander",
-        "Urus",
         "V50",
         "V60",
         "V60 Cross Country",
-        "V70",
         "V90",
         "V90 Cross Country",
-        "Vanquish",
-        "Vantage",
+        "VUE",
         "Veloster",
         "Venue",
         "Venza",
@@ -637,7 +564,6 @@
         "Volt",
         "WRX",
         "WRX STI",
-        "Wraith",
         "Wrangler",
         "Wrangler JK",
         "Wrangler JK Unlimited",
@@ -650,7 +576,6 @@
         "X4",
         "X5",
         "X6",
-        "X6 M",
         "X7",
         "XC40",
         "XC60",
@@ -658,6 +583,8 @@
         "XC90",
         "XE",
         "XF",
+        "XL7",
+        "XLR",
         "XT4",
         "XT5",
         "XTS",
@@ -691,6 +618,7 @@
         "128i",
         "135i",
         "135is",
+        "1FL",
         "1LS",
         "1LT",
         "1SA",
@@ -702,7 +630,6 @@
         "1ST",
         "1SV",
         "2",
-        "2+2",
         "2.0 S",
         "2.0 SL",
         "2.0I",
@@ -710,11 +637,11 @@
         "2.0I Premium",
         "2.0T",
         "2.0T Ultimate",
-        "2.4M",
         "2.4i",
         "2.5",
         "2.5 X",
         "2.5 X Premium Package 4AT",
+        "2.5T",
         "2.5X",
         "2.5XT Limited",
         "2.5i",
@@ -734,8 +661,6 @@
         "2LZ",
         "2SS",
         "3",
-        "3.0R Limited",
-        "3.0i",
         "3.0si",
         "3.2",
         "3.6",
@@ -751,7 +676,6 @@
         "320i",
         "325",
         "325i",
-        "325xi",
         "328d",
         "328i",
         "328xi",
@@ -767,7 +691,6 @@
         "35i",
         "37x",
         "3LT",
-        "3LZ",
         "400h",
         "40i",
         "428i",
@@ -778,21 +701,16 @@
         "450h",
         "450h F SPORT",
         "450hL",
-        "5",
         "50 Years Limited Edition",
         "500",
         "50i",
         "50th Anniversary Special Edition",
         "528i",
-        "53",
         "530e",
         "530i",
         "535i",
-        "540d",
         "540i",
         "550i",
-        "56",
-        "60th Anniversary",
         "640i",
         "650i",
         "7-Passenger",
@@ -802,10 +720,9 @@
         "75th Anniversary",
         "75th Anniversary Edition",
         "80th Spec. Edition",
-        "A-SPEC Package",
+        "860 Special Edition",
         "A-Spec Package",
         "A220",
-        "A91 Edition",
         "AMG C43",
         "AMG C450",
         "AMG C63",
@@ -814,17 +731,13 @@
         "AMG CLS63",
         "AMG E43",
         "AMG E53",
-        "AMG E63",
-        "AMG G63",
         "AMG GLA45",
         "AMG GLC43",
-        "AMG GLC63",
         "AMG GLE43",
         "AMG GLE450",
         "AMG GLE53",
         "AMG GLE63",
         "AMG GLE63 S",
-        "AMG S 63",
         "AMG S63",
         "AMG SL63",
         "AMG SLC43",
@@ -849,8 +762,6 @@
         "American Value Package",
         "Autobahn",
         "Autobiography",
-        "Autograph",
-        "Avalon",
         "Avenir",
         "Backcountry",
         "Base",
@@ -865,7 +776,6 @@
         "Bullitt",
         "C",
         "C Platinum",
-        "C230 Kompressor",
         "C250 Sport",
         "C280 Luxury",
         "C300",
@@ -874,7 +784,6 @@
         "C350 Sport",
         "C400",
         "C450 AMG",
-        "CARRERA",
         "CE",
         "CLA250",
         "CLA45 AMG",
@@ -891,32 +800,30 @@
         "Carrera",
         "Carrera 4S",
         "Carrera S",
-        "Checkered Flag Limited Edition",
         "Citadel",
         "Classic",
         "Classica",
+        "Club",
         "Commercial",
         "Convenience",
         "Countryman",
         "Countryman S",
         "Crew",
-        "CrossRoad",
         "CrossRoad Plus",
         "Crossroad",
         "Custom",
         "DE",
+        "DS",
         "DX",
         "Denali",
         "Denim",
         "Diesel",
         "Driver's Edition",
-        "Drophead Coupe",
         "Dune",
         "Dynamic",
         "E-Hybrid",
         "E250",
         "E300",
-        "E320 4Matic",
         "E350",
         "E400",
         "E450",
@@ -925,11 +832,8 @@
         "ECO",
         "ES",
         "ES-Sport",
-        "ESSENTIAL",
-        "EVO",
         "EX",
         "EX Hybrid",
-        "EX Leather",
         "EX PHEV",
         "EX Plug-In Hybrid",
         "EX Premium",
@@ -939,7 +843,6 @@
         "Easy",
         "EcoBoost",
         "EcoBoost Premium",
-        "Edge Deluxe",
         "Elevation",
         "Elite",
         "Energi SEL",
@@ -967,18 +870,15 @@
         "GLA250",
         "GLC300",
         "GLC350e",
-        "GLE350",
         "GLE400",
         "GLE43 AMG",
         "GLE450",
         "GLI",
         "GLI Autobahn",
         "GLI S",
-        "GLI SEL",
         "GLK250",
         "GLK350",
         "GLS",
-        "GLS350d",
         "GLS450",
         "GLS550",
         "GS",
@@ -989,12 +889,8 @@
         "GT Sport",
         "GT-Line Turbo",
         "GT2",
-        "GT2 RS",
-        "GT3 RS",
-        "GT4",
         "GTI",
         "GTS",
-        "GXP",
         "Golden Eagle",
         "GranLusso",
         "GranSport",
@@ -1003,20 +899,19 @@
         "Grand Touring",
         "Grand Touring AWD",
         "Grand Touring Reserve",
-        "H3",
         "HSE",
         "HSE Dynamic",
         "HSE LUX",
+        "HSE Luxury",
         "HST",
         "Harvest",
         "High Altitude",
         "High Country",
         "Hybrid",
-        "Hybrid CVT SULEV",
+        "Hybrid LUXE",
         "Hybrid Limited",
         "Hybrid Touring",
         "I Premium",
-        "II",
         "ILX",
         "IV",
         "Inscription",
@@ -1027,7 +922,6 @@
         "Journey",
         "King Ranch",
         "L",
-        "LAREDO",
         "LE",
         "LE AWD-e",
         "LE Eco",
@@ -1036,7 +930,6 @@
         "LE Premium",
         "LE Special Edition",
         "LE V6",
-        "LIMITED",
         "LS",
         "LS AT",
         "LS AT POWER PKG",
@@ -1046,7 +939,6 @@
         "LTZ",
         "LTZ Z71",
         "LUXE",
-        "LUXURY",
         "LX",
         "LX AT",
         "LX Hybrid",
@@ -1065,14 +957,12 @@
         "Limited",
         "Limited Platinum",
         "Limited X",
-        "Livery",
         "Lone Star",
         "Lone Star Silver",
         "Longhorn",
         "Lounge",
         "Lusso",
         "Lux",
-        "Luxe",
         "Luxury",
         "Luxury Collection",
         "Luxury Plus",
@@ -1084,11 +974,9 @@
         "M340i",
         "M40i",
         "M5",
-        "M50i",
         "M550i",
+        "M6",
         "M760i",
-        "M850i",
-        "MC",
         "ML320",
         "ML350",
         "ML550",
@@ -1102,7 +990,6 @@
         "NISMO RS",
         "Night",
         "Night Shade",
-        "Nismo",
         "North",
         "North Edition",
         "OUTBACK",
@@ -1115,11 +1002,8 @@
         "Oxford Edition",
         "PRO-4X",
         "PURE",
-        "Performance",
         "Performance Collection",
-        "Performante",
         "Persona Series",
-        "Pista",
         "Platinum",
         "Platinum Edition",
         "Platinum Reserve",
@@ -1136,7 +1020,6 @@
         "Premiere",
         "Premium",
         "Premium 1",
-        "Premium 1 4WD",
         "Premium 2",
         "Premium Collection",
         "Premium I",
@@ -1144,15 +1027,11 @@
         "Premium Luxury",
         "Premium Plus",
         "Prestige",
-        "Pro-4X",
-        "Project 7",
-        "Pure",
         "Pure Plus",
         "Pure Premium",
+        "QUATTRO",
         "Quadrifoglio",
-        "Quattro",
         "R",
-        "R PRO",
         "R-Design",
         "R-Dynamic",
         "R-Dynamic SE",
@@ -1161,7 +1040,7 @@
         "R-Sport",
         "R/T",
         "RED SPORT",
-        "ROADSTER",
+        "RF",
         "RS",
         "RST",
         "RTL",
@@ -1173,10 +1052,7 @@
         "Raptor",
         "Rebel",
         "Red Line",
-        "Red Sport",
         "Release Series 10.0",
-        "Release Series 7.0",
-        "Release Series 8.0",
         "Release Series 9.0",
         "Reserve",
         "Ribelle",
@@ -1184,27 +1060,23 @@
         "Rubicon",
         "S",
         "S E PHEV",
-        "S E-Hybrid",
         "S GranSport",
         "S Hybrid",
         "S Krom Edition",
         "S Line Premium Plus",
         "S Plus",
         "S Special Edition",
-        "S Touring",
         "S line Prestige",
         "S500",
         "S550",
         "S560",
-        "S560e",
         "S63 AMG",
-        "SAHARA",
         "SE",
-        "SE 30th Anniversary",
         "SE 4Motion w/Sunroof & Nav.",
         "SE AWD",
         "SE Hybrid",
         "SE Luxury",
+        "SE Nightshade",
         "SE Plus",
         "SE R-Line",
         "SE Sport",
@@ -1223,11 +1095,10 @@
         "SEL w/Sunroof",
         "SENSORY",
         "SES",
-        "SI",
+        "SH-AWD",
         "SL",
         "SL AWD",
         "SL450",
-        "SL550",
         "SL63 AMG",
         "SLE",
         "SLE-1",
@@ -1240,15 +1111,13 @@
         "SLT-1",
         "SLT-2",
         "SLT1",
-        "SPORT",
         "SR",
         "SR Turbo",
         "SR5",
         "SR5 V6",
         "SRT",
-        "SRT 392",
-        "SRT Hellcat",
         "SRT-10",
+        "SRT4",
         "SRT8",
         "ST",
         "ST Line",
@@ -1264,20 +1133,15 @@
         "SXT Sport",
         "Sahara",
         "Scat Pack",
-        "Scuderia",
-        "Se Awd",
         "Select",
         "Select AWD",
-        "Sensory",
         "Shelby GT350",
         "Shelby GT500",
         "Si",
         "Sierra",
         "Signature",
         "Signature Edition",
-        "Silver Edition",
         "Spec Package",
-        "Speedster",
         "Spider",
         "Sport",
         "Sport 2.0T",
@@ -1287,7 +1151,6 @@
         "Sport S",
         "Sport Tech",
         "Sport Touring",
-        "Spyder",
         "Standard",
         "Summit",
         "Super",
@@ -1301,15 +1164,14 @@
         "T6 R-Design",
         "TDI",
         "TDI S",
+        "TDI SEL",
         "TDI w/Nav",
-        "TITANIUM",
         "TRD Off Road",
         "TRD Pro",
         "TRD Sport",
         "TSI",
         "TSI S",
         "TSI SE",
-        "TURBO",
         "Tech Connect",
         "Tech Package",
         "Technology",
@@ -1336,7 +1198,6 @@
         "Touring V6",
         "Touring-L",
         "Touring-L Plus",
-        "Trackhawk",
         "Tradesman",
         "Trailhawk",
         "Trailhawk Elite",
@@ -1346,19 +1207,16 @@
         "Tundra Grade",
         "Turbo",
         "Turbo Diesel",
-        "Turbo S",
-        "Turbo4",
         "Two",
         "Type-R",
         "Ultimate",
-        "Unlimited",
         "Upland",
         "V",
         "V6",
         "V6 LIMITED",
         "V6 Premium",
+        "V6 Sport",
         "V8",
-        "VALUE PACKAGE",
         "VE",
         "VP",
         "VR6",
@@ -1369,31 +1227,29 @@
         "WRX STI",
         "WRX STI Limited",
         "Warlock",
-        "Westminster",
         "Willys",
         "Willys Wheeler",
         "Wolfsbug Edition",
         "Wolfsburg Edition",
-        "Work",
         "Work Truck",
         "Work Truck 1WT",
         "Work Truck 2WT",
         "Work Van",
         "Works",
         "X",
-        "X Limited",
         "XE",
         "XL",
         "XLE",
+        "XLE Hybrid",
         "XLE Premium",
         "XLE V6",
         "XLS",
         "XLT",
-        "XLT Off-Road",
         "XR",
         "XRS",
         "XSE",
         "XSport",
+        "XT",
         "Z06",
         "Z28",
         "Z51",
@@ -1406,15 +1262,12 @@
         "i Sport",
         "i Touring",
         "passion",
-        "pure",
-        "s",
         "s Grand Touring",
         "s Sport",
         "s Touring",
         "sDrive28i",
         "sDrive35i",
         "sDrive35is",
-        "tS",
         "xDrive28d",
         "xDrive28i",
         "xDrive30i",
@@ -1474,7 +1327,6 @@
       "etiquette": "Type de carburant",
       "type": "categorie",
       "choix": [
-        "Biodiesel",
         "Compressed Natural Gas",
         "Diesel",
         "E85",
@@ -1484,7 +1336,6 @@
         "Electric / Unleaded",
         "Premium Unleaded",
         "Premium Unleaded / Unleaded",
-        "Premium Unleaded; Unleaded",
         "Unleaded",
         "Unleaded / Unleaded"
       ]
@@ -1501,11 +1352,11 @@
     }
   ],
   "metriques": {
-    "mae": 6468.948320183403,
-    "rmse": 14988.292261281464,
-    "taux_2000": 0.2672866356682166,
-    "mae_reference": 11144.896841800077,
-    "taux_2000_reference": 0.11264436778161092
+    "mae": 3988.3307195438733,
+    "rmse": 5956.817610654637,
+    "taux_2000": 0.3682452944748027,
+    "mae_reference": 9671.449491976402,
+    "taux_2000_reference": 0.1197632058287796
   },
   "hierarchie": [
     {
@@ -1532,12 +1383,6 @@
             "Technology & Entertainment Package",
             "Technology Package",
             "Touring Package"
-          ]
-        },
-        {
-          "nom": "NSX",
-          "versions": [
-            "Base"
           ]
         },
         {
@@ -1568,9 +1413,10 @@
         {
           "nom": "TLX",
           "versions": [
-            "A-SPEC Package",
+            "A-Spec Package",
             "Advance Package",
             "Base",
+            "SH-AWD",
             "Technology & A-SPEC Packages",
             "Technology & A-Spec Pack",
             "Technology Package"
@@ -1590,6 +1436,7 @@
         {
           "nom": "4C",
           "versions": [
+            "Base",
             "Spider"
           ]
         },
@@ -1616,41 +1463,6 @@
       ]
     },
     {
-      "marque": "Aston Martin",
-      "modeles": [
-        {
-          "nom": "DB11",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "DB9",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Rapide",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Vanquish",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Vantage",
-          "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
       "marque": "Audi",
       "modeles": [
         {
@@ -1663,7 +1475,8 @@
         {
           "nom": "A3 Cabriolet",
           "versions": [
-            "Premium"
+            "Premium",
+            "Prestige"
           ]
         },
         {
@@ -1702,8 +1515,7 @@
           "versions": [
             "Premium",
             "Premium Plus",
-            "Prestige",
-            "Sport"
+            "Prestige"
           ]
         },
         {
@@ -1719,7 +1531,7 @@
           "versions": [
             "Premium",
             "Prestige",
-            "Quattro",
+            "QUATTRO",
             "Sport"
           ]
         },
@@ -1728,6 +1540,12 @@
           "versions": [
             "Premium Plus",
             "Prestige"
+          ]
+        },
+        {
+          "nom": "A8",
+          "versions": [
+            "QUATTRO"
           ]
         },
         {
@@ -1750,10 +1568,8 @@
         {
           "nom": "Q7",
           "versions": [
-            "Base",
             "Premium",
             "Premium Plus",
-            "Prestige",
             "S line Prestige"
           ]
         },
@@ -1765,12 +1581,6 @@
           ]
         },
         {
-          "nom": "R8",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
           "nom": "RS 3",
           "versions": [
             "Base"
@@ -1779,7 +1589,6 @@
         {
           "nom": "RS 7",
           "versions": [
-            "Base",
             "Prestige"
           ]
         },
@@ -1839,8 +1648,7 @@
         {
           "nom": "S7",
           "versions": [
-            "Base",
-            "Premium Plus"
+            "Base"
           ]
         },
         {
@@ -1865,6 +1673,12 @@
           ]
         },
         {
+          "nom": "TT Coupe",
+          "versions": [
+            "Base"
+          ]
+        },
+        {
           "nom": "TT RS",
           "versions": [
             "Base"
@@ -1873,7 +1687,6 @@
         {
           "nom": "TTS",
           "versions": [
-            "Base",
             "Premium"
           ]
         },
@@ -1915,7 +1728,6 @@
             "320i",
             "325",
             "325i",
-            "325xi",
             "328d",
             "328i",
             "328xi",
@@ -1923,7 +1735,6 @@
             "330i",
             "335i",
             "340i",
-            "M3",
             "M340i"
           ]
         },
@@ -1943,7 +1754,6 @@
             "530e",
             "530i",
             "535i",
-            "540d",
             "540i",
             "550i",
             "M5",
@@ -1953,7 +1763,8 @@
         {
           "nom": "6 Series",
           "versions": [
-            "650i"
+            "650i",
+            "M6"
           ]
         },
         {
@@ -1981,18 +1792,6 @@
             "750Li",
             "750i",
             "M760i"
-          ]
-        },
-        {
-          "nom": "8 Series",
-          "versions": [
-            "M850i"
-          ]
-        },
-        {
-          "nom": "I3",
-          "versions": [
-            "s"
           ]
         },
         {
@@ -2050,7 +1849,6 @@
           "nom": "X3",
           "versions": [
             "2.5i",
-            "3.0i",
             "3.0si",
             "30e",
             "30i",
@@ -2080,8 +1878,6 @@
           "nom": "X5",
           "versions": [
             "40i",
-            "M",
-            "M50i",
             "xDrive30i",
             "xDrive35d",
             "xDrive35i",
@@ -2099,31 +1895,23 @@
           ]
         },
         {
-          "nom": "X6 M",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
           "nom": "X7",
           "versions": [
             "40i",
-            "50i",
-            "M50i"
+            "50i"
           ]
         },
         {
           "nom": "Z3",
           "versions": [
             "3",
-            "ROADSTER"
+            "Roadster"
           ]
         },
         {
           "nom": "Z4",
           "versions": [
             "Base",
-            "ROADSTER",
             "sDrive28i",
             "sDrive35i",
             "sDrive35is"
@@ -2132,31 +1920,8 @@
         {
           "nom": "i3",
           "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Bentley",
-      "modeles": [
-        {
-          "nom": "Continental GT",
-          "versions": [
             "Base",
             "S"
-          ]
-        },
-        {
-          "nom": "Continental GTC",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Flying Spur",
-          "versions": [
-            "Base"
           ]
         }
       ]
@@ -2168,6 +1933,12 @@
           "nom": "Cascada",
           "versions": [
             "Premium"
+          ]
+        },
+        {
+          "nom": "Century",
+          "versions": [
+            "Custom"
           ]
         },
         {
@@ -2224,10 +1995,11 @@
           "nom": "Regal",
           "versions": [
             "Base",
+            "CXL",
             "GS",
             "Premium 1",
-            "Premium 1 4WD",
-            "Premium 2"
+            "Premium 2",
+            "Sport Touring"
           ]
         },
         {
@@ -2242,6 +2014,12 @@
           "versions": [
             "Essence",
             "Preferred"
+          ]
+        },
+        {
+          "nom": "Rendezvous",
+          "versions": [
+            "CX"
           ]
         },
         {
@@ -2264,14 +2042,12 @@
           "nom": "ATS",
           "versions": [
             "Luxury Collection",
-            "Performance Collection",
             "Standard"
           ]
         },
         {
           "nom": "ATS Coupe",
           "versions": [
-            "Premium Luxury",
             "Standard"
           ]
         },
@@ -2299,14 +2075,14 @@
         {
           "nom": "CT6",
           "versions": [
-            "Base"
+            "Base",
+            "Premium Luxury"
           ]
         },
         {
           "nom": "CTS",
           "versions": [
             "2.8",
-            "3.6",
             "Base"
           ]
         },
@@ -2338,7 +2114,6 @@
         {
           "nom": "Escalade",
           "versions": [
-            "Base",
             "Luxury"
           ]
         },
@@ -2347,7 +2122,8 @@
           "versions": [
             "Luxury",
             "Platinum",
-            "Premium"
+            "Premium",
+            "Premium Luxury"
           ]
         },
         {
@@ -2361,11 +2137,16 @@
           ]
         },
         {
+          "nom": "XLR",
+          "versions": [
+            "Base"
+          ]
+        },
+        {
           "nom": "XT4",
           "versions": [
             "Luxury",
-            "Premium Luxury",
-            "Sport"
+            "Premium Luxury"
           ]
         },
         {
@@ -2382,7 +2163,8 @@
           "nom": "XTS",
           "versions": [
             "Luxury",
-            "Luxury Collection"
+            "Luxury Collection",
+            "Premium Luxury"
           ]
         }
       ]
@@ -2409,6 +2191,7 @@
           "nom": "Blazer",
           "versions": [
             "2LT",
+            "3LT",
             "RS"
           ]
         },
@@ -2419,6 +2202,7 @@
             "1SS",
             "2LT",
             "2SS",
+            "3LT",
             "Z28",
             "ZL1"
           ]
@@ -2453,7 +2237,6 @@
             "2LT",
             "2LZ",
             "3LT",
-            "3LZ",
             "Base",
             "Grand Sport",
             "Z06",
@@ -2479,8 +2262,7 @@
           "versions": [
             "1LT",
             "2LT",
-            "LS",
-            "LTZ"
+            "LS"
           ]
         },
         {
@@ -2489,7 +2271,6 @@
             "1LT",
             "2FL",
             "2LT",
-            "L",
             "LS",
             "LT",
             "LTZ",
@@ -2507,7 +2288,6 @@
           "nom": "Express Cargo",
           "versions": [
             "Base",
-            "Work",
             "Work Van"
           ]
         },
@@ -2535,6 +2315,7 @@
             "1LS",
             "1LT",
             "2LT",
+            "LS",
             "LT",
             "LTZ",
             "Premier"
@@ -2562,16 +2343,12 @@
           ]
         },
         {
-          "nom": "Silverado",
-          "versions": [
-            "LT"
-          ]
-        },
-        {
           "nom": "Silverado 1500",
           "versions": [
+            "1LS",
             "1LT",
             "2LT",
+            "Base",
             "Custom",
             "High Country",
             "LS",
@@ -2590,7 +2367,8 @@
           "nom": "Silverado 1500 LD",
           "versions": [
             "Custom",
-            "LT"
+            "LT",
+            "Work Truck 1WT"
           ]
         },
         {
@@ -2623,11 +2401,9 @@
         {
           "nom": "Sonic",
           "versions": [
-            "1LS",
             "LS",
             "LT",
-            "LTZ",
-            "Premier"
+            "LTZ"
           ]
         },
         {
@@ -2658,17 +2434,18 @@
         {
           "nom": "Trailblazer",
           "versions": [
-            "Activ"
+            "Activ",
+            "RS"
           ]
         },
         {
           "nom": "Traverse",
           "versions": [
+            "1FL",
             "1LT",
             "2LT",
             "LS",
-            "Premier",
-            "RS"
+            "Premier"
           ]
         },
         {
@@ -2728,12 +2505,6 @@
           ]
         },
         {
-          "nom": "Cirrus",
-          "versions": [
-            "LX"
-          ]
-        },
-        {
           "nom": "Crossfire",
           "versions": [
             "Base",
@@ -2744,7 +2515,7 @@
           "nom": "PT Cruiser",
           "versions": [
             "Base",
-            "LIMITED",
+            "Limited",
             "Touring Edition"
           ]
         },
@@ -2764,6 +2535,7 @@
         {
           "nom": "Pacifica Hybrid",
           "versions": [
+            "Limited",
             "Platinum",
             "Premium",
             "Touring L"
@@ -2784,7 +2556,6 @@
             "Limited",
             "S",
             "Touring",
-            "Touring Plus",
             "Touring-L"
           ]
         }
@@ -2796,7 +2567,6 @@
         {
           "nom": "Avenger",
           "versions": [
-            "R/T",
             "SE",
             "SXT"
           ]
@@ -2804,17 +2574,17 @@
         {
           "nom": "Caliber",
           "versions": [
-            "SE",
+            "SRT4",
             "SXT"
           ]
         },
         {
           "nom": "Challenger",
           "versions": [
-            "GT",
             "R/T",
             "SE",
             "SRT",
+            "SRT8",
             "SXT",
             "SXT Plus",
             "Scat Pack",
@@ -2828,7 +2598,7 @@
             "GT",
             "R/T",
             "SE",
-            "SRT 392",
+            "SRT",
             "SRT8",
             "SXT",
             "Scat Pack"
@@ -2862,7 +2632,6 @@
             "R/T",
             "SLT",
             "SRT",
-            "SRT Hellcat",
             "SXT"
           ]
         },
@@ -2877,7 +2646,6 @@
             "Mainstreet",
             "R/T",
             "SE",
-            "SE 30th Anniversary",
             "SE Plus",
             "SXT"
           ]
@@ -2886,13 +2654,11 @@
           "nom": "Journey",
           "versions": [
             "Crew",
-            "CrossRoad",
             "CrossRoad Plus",
             "Crossroad",
             "Express",
             "GT",
             "Limited",
-            "Mainstreet",
             "R/T",
             "SE",
             "SXT"
@@ -2901,8 +2667,7 @@
         {
           "nom": "Nitro",
           "versions": [
-            "SLT",
-            "SXT"
+            "SLT"
           ]
         },
         {
@@ -2982,95 +2747,6 @@
       ]
     },
     {
-      "marque": "Ferrari",
-      "modeles": [
-        {
-          "nom": "360",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "458 Italia",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "488",
-          "versions": [
-            "Pista"
-          ]
-        },
-        {
-          "nom": "488 GTB",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "599",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "612",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "812",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "California",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "California T",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "F12berlinetta",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "F430",
-          "versions": [
-            "Scuderia"
-          ]
-        },
-        {
-          "nom": "F8",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "FF",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Portofino",
-          "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
       "marque": "Ford",
       "modeles": [
         {
@@ -3079,7 +2755,7 @@
             "Energi SEL",
             "SE",
             "SEL",
-            "TITANIUM"
+            "Titanium"
           ]
         },
         {
@@ -3092,14 +2768,6 @@
           "nom": "E-Series Econoline Van",
           "versions": [
             "Commercial"
-          ]
-        },
-        {
-          "nom": "EcoSport",
-          "versions": [
-            "SE",
-            "SES",
-            "Titanium"
           ]
         },
         {
@@ -3131,7 +2799,6 @@
             "SE",
             "SEL",
             "Titanium",
-            "XLS",
             "XLT"
           ]
         },
@@ -3164,7 +2831,6 @@
         {
           "nom": "F-150",
           "versions": [
-            "60th Anniversary",
             "FX4",
             "King Ranch",
             "Lariat",
@@ -3195,18 +2861,6 @@
             "Platinum",
             "XL",
             "XLT"
-          ]
-        },
-        {
-          "nom": "F-350 Super Duty Chassis Cab",
-          "versions": [
-            "XL"
-          ]
-        },
-        {
-          "nom": "F-450 Super Duty",
-          "versions": [
-            "Platinum"
           ]
         },
         {
@@ -3252,6 +2906,12 @@
           ]
         },
         {
+          "nom": "Freestyle",
+          "versions": [
+            "SEL"
+          ]
+        },
+        {
           "nom": "Fusion",
           "versions": [
             "Hybrid",
@@ -3260,7 +2920,9 @@
             "SE",
             "SE Hybrid",
             "SEL",
-            "Titanium"
+            "Sport",
+            "Titanium",
+            "V6 Sport"
           ]
         },
         {
@@ -3273,7 +2935,6 @@
         {
           "nom": "Fusion Hybrid",
           "versions": [
-            "Platinum",
             "SE"
           ]
         },
@@ -3299,13 +2960,11 @@
         {
           "nom": "Ranger",
           "versions": [
-            "Edge Deluxe",
             "FX4 Off-Road",
             "Lariat",
             "Sport",
             "XL",
-            "XLT",
-            "XLT Off-Road"
+            "XLT"
           ]
         },
         {
@@ -3326,7 +2985,8 @@
           "nom": "Transit",
           "versions": [
             "Base",
-            "XL"
+            "XL",
+            "XLT"
           ]
         },
         {
@@ -3381,6 +3041,12 @@
           ]
         },
         {
+          "nom": "G80",
+          "versions": [
+            "3.8"
+          ]
+        },
+        {
           "nom": "G90",
           "versions": [
             "Premium",
@@ -3409,7 +3075,6 @@
         {
           "nom": "Canyon",
           "versions": [
-            "AT4",
             "All Terrain",
             "Base",
             "Denali",
@@ -3448,8 +3113,7 @@
             "Elevation",
             "SL",
             "SLE",
-            "SLT",
-            "Work Truck"
+            "SLT"
           ]
         },
         {
@@ -3468,16 +3132,10 @@
         {
           "nom": "Sierra 2500HD",
           "versions": [
+            "AT4",
             "SLE",
             "SLT",
-            "Sierra",
-            "Work Truck"
-          ]
-        },
-        {
-          "nom": "Sierra 3500",
-          "versions": [
-            "SLT"
+            "Sierra"
           ]
         },
         {
@@ -3488,12 +3146,6 @@
         },
         {
           "nom": "Sierra 3500HD",
-          "versions": [
-            "SLT"
-          ]
-        },
-        {
-          "nom": "Sierra Classic 2500HD",
           "versions": [
             "SLT"
           ]
@@ -3521,7 +3173,6 @@
           "nom": "Yukon XL",
           "versions": [
             "Denali",
-            "SLE",
             "SLT"
           ]
         }
@@ -3534,7 +3185,6 @@
           "nom": "Accord",
           "versions": [
             "EX",
-            "EX Leather",
             "EX-L",
             "EX-L V6",
             "Hybrid",
@@ -3545,12 +3195,6 @@
             "Touring",
             "Touring V6",
             "VP"
-          ]
-        },
-        {
-          "nom": "Accord Crosstour",
-          "versions": [
-            "EX-L V6"
           ]
         },
         {
@@ -3572,15 +3216,12 @@
             "EX-L",
             "EX-T",
             "Hybrid",
-            "Hybrid CVT SULEV",
             "LX",
             "LX-S",
             "SE",
-            "SI",
             "Si",
             "Sport",
             "Touring",
-            "VALUE PACKAGE",
             "VP"
           ]
         },
@@ -3653,7 +3294,6 @@
             "EX-L",
             "Elite",
             "LX",
-            "SE",
             "Touring"
           ]
         },
@@ -3665,18 +3305,6 @@
             "RTL-E",
             "RTS",
             "Sport"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Hummer",
-      "modeles": [
-        {
-          "nom": "H3",
-          "versions": [
-            "Base",
-            "H3"
           ]
         }
       ]
@@ -3748,7 +3376,6 @@
         {
           "nom": "Genesis Coupe",
           "versions": [
-            "Base",
             "Premium",
             "R-Spec",
             "Ultimate"
@@ -3757,14 +3384,9 @@
         {
           "nom": "IONIQ",
           "versions": [
+            "Limited",
             "SE",
             "SEL"
-          ]
-        },
-        {
-          "nom": "Ioniq",
-          "versions": [
-            "Limited"
           ]
         },
         {
@@ -3804,7 +3426,7 @@
             "2.0T",
             "2.0T Ultimate",
             "Base",
-            "Sport 2.0T"
+            "Sport"
           ]
         },
         {
@@ -3812,7 +3434,6 @@
           "versions": [
             "Base",
             "GLS",
-            "LIMITED",
             "Limited",
             "SE",
             "SEL Plus",
@@ -3843,6 +3464,7 @@
         {
           "nom": "Tucson",
           "versions": [
+            "ECO",
             "GL",
             "GLS",
             "Limited",
@@ -3868,6 +3490,7 @@
           "nom": "Venue",
           "versions": [
             "Denim",
+            "SE",
             "SEL"
           ]
         },
@@ -3927,14 +3550,12 @@
           "nom": "Q50",
           "versions": [
             "Base",
+            "Hybrid LUXE",
             "LUXE",
             "Premium",
             "RED SPORT",
-            "Red Sport",
             "S",
-            "S Hybrid",
             "SENSORY",
-            "SPORT",
             "Signature Edition",
             "Sport"
           ]
@@ -3954,15 +3575,9 @@
           ]
         },
         {
-          "nom": "QX",
-          "versions": [
-            "56"
-          ]
-        },
-        {
           "nom": "QX30",
           "versions": [
-            "ESSENTIAL",
+            "Essential",
             "Luxury",
             "Premium",
             "Sport"
@@ -3971,13 +3586,12 @@
         {
           "nom": "QX50",
           "versions": [
-            "Autograph",
             "Base",
             "Essential",
             "Journey",
-            "Luxe",
-            "Pure",
-            "Sensory"
+            "LUXE",
+            "PURE",
+            "SENSORY"
           ]
         },
         {
@@ -4008,28 +3622,15 @@
         {
           "nom": "E-PACE",
           "versions": [
+            "First Edition",
             "R-Dynamic SE"
-          ]
-        },
-        {
-          "nom": "E-Pace",
-          "versions": [
-            "First Edition"
-          ]
-        },
-        {
-          "nom": "F-PACE",
-          "versions": [
-            "Premium",
-            "Prestige",
-            "R-Sport",
-            "S"
           ]
         },
         {
           "nom": "F-Pace",
           "versions": [
             "300 Sport",
+            "Premium",
             "Prestige",
             "R-Sport",
             "S",
@@ -4040,17 +3641,8 @@
           "nom": "F-TYPE",
           "versions": [
             "Base",
-            "Project 7",
             "R",
             "R-Dynamic"
-          ]
-        },
-        {
-          "nom": "F-Type",
-          "versions": [
-            "Checkered Flag Limited Edition",
-            "R-Dynamic",
-            "SVR"
           ]
         },
         {
@@ -4065,6 +3657,7 @@
         {
           "nom": "XF",
           "versions": [
+            "Premium",
             "Prestige"
           ]
         }
@@ -4130,8 +3723,7 @@
           "versions": [
             "Overland",
             "Rubicon",
-            "Sport",
-            "Sport S"
+            "Sport"
           ]
         },
         {
@@ -4139,8 +3731,6 @@
           "versions": [
             "Altitude",
             "High Altitude",
-            "LAREDO",
-            "LIMITED",
             "Laredo",
             "Laredo E",
             "Limited",
@@ -4150,7 +3740,6 @@
             "SRT",
             "SRT8",
             "Summit",
-            "Trackhawk",
             "Trailhawk",
             "Upland"
           ]
@@ -4185,12 +3774,8 @@
             "75th Anniversary Edition",
             "Freedom Edition",
             "Rubicon",
-            "SAHARA",
-            "SPORT",
             "Sahara",
             "Sport",
-            "Sport S",
-            "Unlimited",
             "X"
           ]
         },
@@ -4232,17 +3817,6 @@
       ]
     },
     {
-      "marque": "KARMA",
-      "modeles": [
-        {
-          "nom": "Revero",
-          "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
       "marque": "Kia",
       "modeles": [
         {
@@ -4261,22 +3835,14 @@
           ]
         },
         {
-          "nom": "FORTE",
+          "nom": "Forte",
           "versions": [
             "EX",
             "FE",
             "GT",
             "LX",
             "LXS",
-            "S"
-          ]
-        },
-        {
-          "nom": "Forte",
-          "versions": [
-            "EX",
-            "FE",
-            "LX",
+            "S",
             "SX"
           ]
         },
@@ -4316,7 +3882,6 @@
             "EX Premium",
             "FE",
             "LX",
-            "S Touring",
             "Touring",
             "Touring SE"
           ]
@@ -4333,12 +3898,6 @@
             "LX Hybrid",
             "SX",
             "SXL"
-          ]
-        },
-        {
-          "nom": "RIO",
-          "versions": [
-            "LX"
           ]
         },
         {
@@ -4416,7 +3975,6 @@
         {
           "nom": "Spectra",
           "versions": [
-            "5",
             "EX",
             "LS",
             "LS AT",
@@ -4449,31 +4007,6 @@
       ]
     },
     {
-      "marque": "Lamborghini",
-      "modeles": [
-        {
-          "nom": "Gallardo",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Huracan",
-          "versions": [
-            "Base",
-            "EVO",
-            "Performante"
-          ]
-        },
-        {
-          "nom": "Urus",
-          "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
       "marque": "Land Rover",
       "modeles": [
         {
@@ -4487,6 +4020,7 @@
           "nom": "Discovery Sport",
           "versions": [
             "HSE",
+            "HSE Luxury",
             "S",
             "SE"
           ]
@@ -4500,15 +4034,8 @@
         {
           "nom": "LR4",
           "versions": [
-            "HSE"
-          ]
-        },
-        {
-          "nom": "Range Rover",
-          "versions": [
             "HSE",
-            "Supercharged",
-            "Westminster"
+            "HSE LUX"
           ]
         },
         {
@@ -4517,7 +4044,7 @@
             "HSE",
             "HSE Dynamic",
             "Landmark Edition",
-            "Pure",
+            "PURE",
             "Pure Plus",
             "Pure Premium",
             "SE"
@@ -4573,14 +4100,13 @@
         {
           "nom": "GS",
           "versions": [
-            "350",
-            "F"
+            "350"
           ]
         },
         {
           "nom": "GX",
           "versions": [
-            "LUXURY"
+            "Luxury"
           ]
         },
         {
@@ -4602,6 +4128,7 @@
         {
           "nom": "LS",
           "versions": [
+            "Base",
             "L"
           ]
         },
@@ -4639,7 +4166,7 @@
             "450h",
             "450hL",
             "F Sport",
-            "LUXURY"
+            "Luxury"
           ]
         },
         {
@@ -4682,7 +4209,6 @@
         {
           "nom": "Continental",
           "versions": [
-            "Livery",
             "Reserve",
             "Select"
           ]
@@ -4696,6 +4222,7 @@
         {
           "nom": "MKC",
           "versions": [
+            "Base",
             "Premiere",
             "Reserve",
             "Select"
@@ -4742,18 +4269,8 @@
         {
           "nom": "Navigator",
           "versions": [
-            "Reserve"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Lotus",
-      "modeles": [
-        {
-          "nom": "Evora",
-          "versions": [
-            "2+2"
+            "Reserve",
+            "Select"
           ]
         }
       ]
@@ -4772,9 +4289,7 @@
         {
           "nom": "Convertible",
           "versions": [
-            "Base",
-            "John Cooper Works",
-            "S"
+            "Base"
           ]
         },
         {
@@ -4839,7 +4354,6 @@
           "nom": "GranTurismo",
           "versions": [
             "Base",
-            "MC",
             "Sport"
           ]
         },
@@ -4847,9 +4361,9 @@
           "nom": "Levante",
           "versions": [
             "Base",
-            "GTS",
             "GranLusso",
-            "GranSport"
+            "GranSport",
+            "S GranSport"
           ]
         },
         {
@@ -4866,6 +4380,7 @@
         {
           "nom": "B-Series",
           "versions": [
+            "DS",
             "SE"
           ]
         },
@@ -4900,7 +4415,6 @@
           "nom": "CX-7",
           "versions": [
             "i Sport",
-            "s Grand Touring",
             "s Touring"
           ]
         },
@@ -4917,23 +4431,6 @@
           ]
         },
         {
-          "nom": "MAZDA3",
-          "versions": [
-            "Mazdaspeed3 Touring",
-            "S",
-            "Select",
-            "Sport",
-            "i",
-            "i SV",
-            "i Sport",
-            "i Touring",
-            "s",
-            "s Grand Touring",
-            "s Sport",
-            "s Touring"
-          ]
-        },
-        {
           "nom": "MAZDA5",
           "versions": [
             "Grand Touring",
@@ -4946,28 +4443,29 @@
           "nom": "MAZDA6",
           "versions": [
             "Grand Touring",
+            "Grand Touring Reserve",
+            "S",
             "Signature",
             "Sport",
+            "Touring",
             "i",
             "i Grand Touring",
             "i Sport",
             "i Touring",
-            "s",
             "s Touring"
           ]
         },
         {
           "nom": "MX-5 Miata",
           "versions": [
-            "Base",
             "Grand Touring",
-            "Sport",
             "Touring"
           ]
         },
         {
           "nom": "MX-5 Miata RF",
           "versions": [
+            "Club",
             "Grand Touring"
           ]
         },
@@ -4984,72 +4482,31 @@
             "AWD",
             "Base",
             "Grand Touring",
+            "Mazdaspeed3 Touring",
             "Preferred",
             "Preferred AWD",
             "Premium",
+            "S",
             "Select",
             "Select AWD",
             "Sport",
             "Touring",
             "Turbo",
+            "i",
+            "i SV",
             "i Sport",
-            "s Grand Touring"
-          ]
-        },
-        {
-          "nom": "Mazda6",
-          "versions": [
-            "Grand Touring",
-            "Grand Touring Reserve",
-            "Signature",
-            "Sport",
-            "i Grand Touring"
+            "i Touring",
+            "s Grand Touring",
+            "s Sport",
+            "s Touring"
           ]
         },
         {
           "nom": "Tribute",
           "versions": [
-            "LX",
             "i Sport",
             "s Grand Touring",
             "s Sport"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "McLaren",
-      "modeles": [
-        {
-          "nom": "12C",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "570GT",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "650S",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "675LT",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "720S",
-          "versions": [
-            "Base",
-            "Luxury",
-            "Performance"
           ]
         }
       ]
@@ -5064,40 +4521,11 @@
           ]
         },
         {
-          "nom": "AMG GT Coupe",
-          "versions": [
-            "Base",
-            "C",
-            "R",
-            "R PRO",
-            "S"
-          ]
-        },
-        {
-          "nom": "AMG GT Roadster",
-          "versions": [
-            "C"
-          ]
-        },
-        {
-          "nom": "AMG? GT",
-          "versions": [
-            "S"
-          ]
-        },
-        {
-          "nom": "AMGA GT 4-Door Coupe",
-          "versions": [
-            "53"
-          ]
-        },
-        {
           "nom": "C-Class",
           "versions": [
             "AMG C43",
             "AMG C450",
             "AMG C63",
-            "C230 Kompressor",
             "C250 Sport",
             "C280 Luxury",
             "C300",
@@ -5170,10 +4598,8 @@
           "versions": [
             "AMG E43",
             "AMG E53",
-            "AMG E63",
             "E250",
             "E300",
-            "E320 4Matic",
             "E350",
             "E400",
             "E450",
@@ -5184,7 +4610,6 @@
         {
           "nom": "G-Class",
           "versions": [
-            "AMG G63",
             "G550"
           ]
         },
@@ -5224,7 +4649,6 @@
           "nom": "GLC Coupe",
           "versions": [
             "AMG GLC43",
-            "AMG GLC63",
             "GLC300"
           ]
         },
@@ -5241,7 +4665,6 @@
           "versions": [
             "AMG GLE53",
             "AMG GLE63 S",
-            "GLE350",
             "GLE450",
             "ML350"
           ]
@@ -5280,7 +4703,6 @@
         {
           "nom": "GLS-Class",
           "versions": [
-            "GLS350d",
             "GLS450",
             "GLS550"
           ]
@@ -5296,12 +4718,10 @@
         {
           "nom": "S-Class",
           "versions": [
-            "AMG S 63",
             "AMG S63",
             "S500",
             "S550",
             "S560",
-            "S560e",
             "S63 AMG"
           ]
         },
@@ -5309,8 +4729,7 @@
           "nom": "SL Roadster",
           "versions": [
             "AMG SL63",
-            "SL450",
-            "SL550"
+            "SL450"
           ]
         },
         {
@@ -5331,12 +4750,6 @@
             "AMG SLK32",
             "AMG SLK55",
             "SLK350"
-          ]
-        },
-        {
-          "nom": "SLR McLaren",
-          "versions": [
-            "Base"
           ]
         },
         {
@@ -5367,7 +4780,8 @@
         {
           "nom": "Eclipse Spyder",
           "versions": [
-            "GT"
+            "GT",
+            "SE"
           ]
         },
         {
@@ -5396,14 +4810,13 @@
             "DE",
             "ES",
             "GT",
-            "SE"
+            "RF"
           ]
         },
         {
           "nom": "Mirage G4",
           "versions": [
-            "ES",
-            "SE"
+            "ES"
           ]
         },
         {
@@ -5411,10 +4824,9 @@
           "versions": [
             "ES",
             "GT",
-            "LS",
             "SE",
+            "SE AWD",
             "SEL",
-            "Se Awd",
             "XLS"
           ]
         }
@@ -5438,9 +4850,7 @@
         {
           "nom": "370Z Coupe",
           "versions": [
-            "Sport",
-            "Sport Tech",
-            "Touring"
+            "Sport Tech"
           ]
         },
         {
@@ -5461,19 +4871,23 @@
           ]
         },
         {
+          "nom": "Altima Coupe",
+          "versions": [
+            "S"
+          ]
+        },
+        {
           "nom": "Altima Sedan",
           "versions": [
             "Base",
             "S",
-            "SL",
-            "SV"
+            "SL"
           ]
         },
         {
           "nom": "Armada",
           "versions": [
-            "Platinum",
-            "SL"
+            "Platinum"
           ]
         },
         {
@@ -5497,14 +4911,6 @@
             "NISMO",
             "NISMO RS",
             "S",
-            "SL",
-            "SV"
-          ]
-        },
-        {
-          "nom": "Juke",
-          "versions": [
-            "NISMO",
             "SL",
             "SV"
           ]
@@ -5556,20 +4962,16 @@
         {
           "nom": "Pathfinder",
           "versions": [
-            "LE",
             "Platinum",
             "S",
-            "SE",
             "SL",
             "SV",
-            "Silver Edition",
             "XE"
           ]
         },
         {
           "nom": "Quest",
           "versions": [
-            "S",
             "SV"
           ]
         },
@@ -5599,7 +5001,7 @@
             "2.0 S",
             "2.0 SL",
             "Base",
-            "Nismo",
+            "NISMO",
             "S",
             "SE-R",
             "SE-R Spec V",
@@ -5622,14 +5024,14 @@
         {
           "nom": "Titan XD",
           "versions": [
-            "Platinum Reserve",
-            "Pro-4X",
+            "PRO-4X",
             "SV"
           ]
         },
         {
           "nom": "Versa",
           "versions": [
+            "Base",
             "S",
             "SL",
             "SV"
@@ -5661,18 +5063,6 @@
         {
           "nom": "cube",
           "versions": [
-            "Base",
-            "S"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Plymouth",
-      "modeles": [
-        {
-          "nom": "Prowler",
-          "versions": [
             "Base"
           ]
         }
@@ -5682,21 +5072,9 @@
       "marque": "Pontiac",
       "modeles": [
         {
-          "nom": "G5",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
           "nom": "G6",
           "versions": [
             "GT"
-          ]
-        },
-        {
-          "nom": "Grand Prix",
-          "versions": [
-            "GXP"
           ]
         },
         {
@@ -5733,33 +5111,24 @@
           "nom": "718",
           "versions": [
             "Base",
-            "S",
-            "Spyder"
+            "S"
           ]
         },
         {
           "nom": "911",
           "versions": [
-            "CARRERA",
             "Carrera",
             "Carrera 4S",
             "Carrera S",
-            "GT2 RS",
-            "GT3 RS",
             "S",
-            "Speedster",
-            "TURBO",
-            "Turbo",
-            "Turbo S"
+            "Turbo"
           ]
         },
         {
           "nom": "Boxster",
           "versions": [
             "Base",
-            "GTS",
-            "S",
-            "Spyder"
+            "S"
           ]
         },
         {
@@ -5771,22 +5140,19 @@
             "GTS",
             "Platinum Edition",
             "S",
-            "S E-Hybrid",
             "Turbo"
           ]
         },
         {
           "nom": "Cayenne Coupe",
           "versions": [
-            "GTS",
             "S"
           ]
         },
         {
           "nom": "Cayman",
           "versions": [
-            "Base",
-            "GT4"
+            "Base"
           ]
         },
         {
@@ -5829,8 +5195,7 @@
         {
           "nom": "Promaster City",
           "versions": [
-            "SLT",
-            "Tradesman"
+            "SLT"
           ]
         },
         {
@@ -5860,6 +5225,7 @@
             "Outdoorsman",
             "Rebel",
             "SLT",
+            "ST",
             "Sport",
             "Tradesman"
           ]
@@ -5883,65 +5249,15 @@
           "versions": [
             "Big Horn",
             "Laramie",
-            "Laramie Longhorn",
             "Limited",
             "Longhorn",
-            "SLT",
-            "Tradesman"
+            "SLT"
           ]
         },
         {
           "nom": "Ram 5500 Chassis Cab",
           "versions": [
             "Tradesman"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Rolls-Royce",
-      "modeles": [
-        {
-          "nom": "Cullinan",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Dawn",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Ghost",
-          "versions": [
-            "Base"
-          ]
-        },
-        {
-          "nom": "Phantom",
-          "versions": [
-            "Base",
-            "Drophead Coupe"
-          ]
-        },
-        {
-          "nom": "Wraith",
-          "versions": [
-            "Base"
-          ]
-        }
-      ]
-    },
-    {
-      "marque": "Saab",
-      "modeles": [
-        {
-          "nom": "3-Sep",
-          "versions": [
-            "2.0T",
-            "Turbo4"
           ]
         }
       ]
@@ -5971,7 +5287,8 @@
         {
           "nom": "Outlook",
           "versions": [
-            "XE"
+            "XE",
+            "XR"
           ]
         },
         {
@@ -5979,6 +5296,12 @@
           "versions": [
             "Red Line",
             "Roadster"
+          ]
+        },
+        {
+          "nom": "VUE",
+          "versions": [
+            "XE"
           ]
         }
       ]
@@ -6017,8 +5340,6 @@
             "10 Series",
             "Base",
             "Release Series 10.0",
-            "Release Series 7.0",
-            "Release Series 8.0",
             "Release Series 9.0",
             "Spec Package"
           ]
@@ -6047,7 +5368,7 @@
           "nom": "BRZ",
           "versions": [
             "Limited",
-            "tS"
+            "Premium"
           ]
         },
         {
@@ -6055,6 +5376,7 @@
           "versions": [
             "Base",
             "Hybrid",
+            "Hybrid Touring",
             "Limited",
             "Premium",
             "Sport"
@@ -6068,8 +5390,7 @@
             "2.5X",
             "2.5XT Limited",
             "Premium",
-            "X",
-            "X Limited"
+            "X"
           ]
         },
         {
@@ -6086,25 +5407,24 @@
             "WRX",
             "WRX Limited",
             "WRX STI",
-            "WRX STI Limited",
-            "i"
+            "WRX STI Limited"
           ]
         },
         {
           "nom": "Legacy",
           "versions": [
-            "I Premium"
+            "2.5i Limited"
           ]
         },
         {
           "nom": "Outback",
           "versions": [
             "2.5i Limited",
-            "3.0R Limited",
             "3.6R Limited",
             "I Premium",
             "Limited",
-            "OUTBACK"
+            "OUTBACK",
+            "XT"
           ]
         },
         {
@@ -6124,7 +5444,6 @@
         {
           "nom": "XV Crosstrek",
           "versions": [
-            "Hybrid",
             "Limited",
             "Premium"
           ]
@@ -6162,6 +5481,12 @@
           "versions": [
             "LE Popular"
           ]
+        },
+        {
+          "nom": "XL7",
+          "versions": [
+            "Luxury"
+          ]
         }
       ]
     },
@@ -6171,7 +5496,6 @@
         {
           "nom": "4Runner",
           "versions": [
-            "LIMITED",
             "Limited",
             "Night Shade",
             "Off-Road",
@@ -6181,10 +5505,17 @@
           ]
         },
         {
+          "nom": "86",
+          "versions": [
+            "860 Special Edition",
+            "Base"
+          ]
+        },
+        {
           "nom": "Avalon",
           "versions": [
-            "Avalon",
             "Limited",
+            "Touring",
             "XSE"
           ]
         },
@@ -6205,9 +5536,11 @@
             "LE",
             "LE V6",
             "SE",
+            "SE Nightshade",
             "SE Sport",
             "SE V6",
             "XLE",
+            "XLE Hybrid",
             "XLE V6",
             "XSE"
           ]
@@ -6257,6 +5590,12 @@
           ]
         },
         {
+          "nom": "FJ Cruiser",
+          "versions": [
+            "Base"
+          ]
+        },
+        {
           "nom": "Highlander",
           "versions": [
             "Base",
@@ -6270,12 +5609,6 @@
             "SE",
             "XLE",
             "XSE"
-          ]
-        },
-        {
-          "nom": "MR2 Spyder",
-          "versions": [
-            "Base"
           ]
         },
         {
@@ -6293,24 +5626,16 @@
           "versions": [
             "Base",
             "Five",
-            "II",
             "IV",
             "LE",
             "LE AWD-e",
-            "Limited",
             "One",
             "Persona Series",
             "Standard",
             "Three Touring",
             "Touring",
-            "Two"
-          ]
-        },
-        {
-          "nom": "Prius C",
-          "versions": [
-            "L",
-            "LE"
+            "Two",
+            "XLE"
           ]
         },
         {
@@ -6334,6 +5659,8 @@
           "nom": "Prius c",
           "versions": [
             "Four",
+            "L",
+            "LE",
             "One",
             "Three",
             "Two"
@@ -6342,7 +5669,6 @@
         {
           "nom": "Prius v",
           "versions": [
-            "Five",
             "Three",
             "Two"
           ]
@@ -6357,13 +5683,8 @@
             "Platinum",
             "SE",
             "Sport",
-            "XLE"
-          ]
-        },
-        {
-          "nom": "Rav4",
-          "versions": [
-            "Base"
+            "XLE",
+            "XSE"
           ]
         },
         {
@@ -6387,8 +5708,6 @@
         {
           "nom": "Supra",
           "versions": [
-            "A91 Edition",
-            "Launch Edition",
             "Premium"
           ]
         },
@@ -6420,7 +5739,6 @@
           "versions": [
             "Base",
             "LE",
-            "Limited",
             "XLE"
           ]
         },
@@ -6448,6 +5766,7 @@
         {
           "nom": "Arteon",
           "versions": [
+            "SEL",
             "SEL Premium",
             "SEL R-Line"
           ]
@@ -6551,7 +5870,6 @@
           "versions": [
             "S",
             "SE",
-            "TDI S",
             "TSI S",
             "TSI SE"
           ]
@@ -6564,7 +5882,6 @@
             "GLI",
             "GLI Autobahn",
             "GLI S",
-            "GLI SEL",
             "Jetta",
             "S",
             "SE",
@@ -6574,6 +5891,7 @@
             "SEL Premium",
             "SEL w/Sunroof",
             "TDI",
+            "TDI SEL",
             "TDI w/Nav"
           ]
         },
@@ -6582,6 +5900,12 @@
           "versions": [
             "SE",
             "TDI"
+          ]
+        },
+        {
+          "nom": "New Beetle",
+          "versions": [
+            "Base"
           ]
         },
         {
@@ -6622,6 +5946,7 @@
         {
           "nom": "Tiguan",
           "versions": [
+            "R-Line",
             "S",
             "SE",
             "SE 4Motion w/Sunroof & Nav.",
@@ -6665,14 +5990,9 @@
           ]
         },
         {
-          "nom": "S40",
-          "versions": [
-            "T5"
-          ]
-        },
-        {
           "nom": "S60",
           "versions": [
+            "2.5T",
             "Dynamic",
             "Momentum",
             "R-Design",
@@ -6681,6 +6001,12 @@
             "T5 Platinum",
             "T5 Premier",
             "T6"
+          ]
+        },
+        {
+          "nom": "S80",
+          "versions": [
+            "3.2"
           ]
         },
         {
@@ -6704,19 +6030,14 @@
             "Momentum",
             "Polestar",
             "Premier",
-            "Premier Plus"
+            "Premier Plus",
+            "R-Design"
           ]
         },
         {
           "nom": "V60 Cross Country",
           "versions": [
             "Base"
-          ]
-        },
-        {
-          "nom": "V70",
-          "versions": [
-            "2.4M"
           ]
         },
         {
@@ -6734,7 +6055,6 @@
         {
           "nom": "XC40",
           "versions": [
-            "Inscription",
             "Momentum",
             "R-Design"
           ]
@@ -6745,7 +6065,6 @@
             "3.2",
             "Inscription",
             "Momentum",
-            "Premier",
             "R-Design",
             "T5",
             "T6",
@@ -6767,8 +6086,7 @@
             "Base",
             "Inscription",
             "Momentum",
-            "R-Design",
-            "T6"
+            "R-Design"
           ]
         }
       ]
@@ -6780,8 +6098,8 @@
           "nom": "fortwo",
           "versions": [
             "Brabus",
-            "passion",
-            "pure"
+            "PURE",
+            "passion"
           ]
         }
       ]

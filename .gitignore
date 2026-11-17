@@ -5,4 +5,5 @@ __pycache__/
 *.pyc
 .coverage
 .pytest_cache/
-historique.json
+donnees/historique.json
+EXPLICATION.md

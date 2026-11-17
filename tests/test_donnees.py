@@ -8,7 +8,8 @@ import pytest
 from donnees import (
     CIBLE, COLONNES, COLONNES_CATEGORIELLES, COLONNES_NUMERIQUES,
     JeuDeDonnees, Variable, VariableCategorielle, VariableNumerique,
-    charger_csv, construire_hierarchie, creer_variables, nettoyer,
+    MILES_MAXIMUM, PRIX_MAXIMUM, charger_csv, construire_hierarchie, creer_variables,
+    harmoniser_majuscules, nettoyer,
     kilometres_vers_miles, miles_vers_kilometres, variable_depuis_dict,
     verifier_combinaison,
 )
@@ -70,29 +71,67 @@ def test_vrai_jeu_respecte_criteres_enonce():
 
 # ---------- nettoyer ----------
 
+# minimum_annonces=1 : ces petits tableaux n'ont qu'une ou deux voitures par marque
+
 def test_nettoyer_retire_valeurs_manquantes():
     df = pd.DataFrame([ligne(), ligne(make=None), ligne(miles=float("nan"))])
-    assert len(nettoyer(df)) == 1
+    assert len(nettoyer(df, minimum_annonces=1)) == 1
 
 
 def test_nettoyer_retire_valeurs_aberrantes():
     df = pd.DataFrame([ligne(), ligne(price=0), ligne(price=-500), ligne(miles=-1)])
-    resultat = nettoyer(df)
+    resultat = nettoyer(df, minimum_annonces=1)
     assert len(resultat) == 1
     assert resultat[CIBLE].iloc[0] == 20000
 
 
 def test_nettoyer_garde_les_cas_limites_valides():
-    """Une voiture neuve (0 mile) et un prix de 1 $ sont valides."""
-    df = pd.DataFrame([ligne(miles=0), ligne(price=1)])
-    assert len(nettoyer(df)) == 2
+    """Une voiture neuve (0 mile), un prix de 1 $ et les plafonds exacts sont gardés."""
+    df = pd.DataFrame([ligne(miles=0), ligne(price=1), ligne(price=PRIX_MAXIMUM),
+                       ligne(miles=MILES_MAXIMUM)])
+    assert len(nettoyer(df, minimum_annonces=1)) == 4
+
+
+@pytest.mark.parametrize("trop", [{"price": PRIX_MAXIMUM + 1}, {"miles": MILES_MAXIMUM + 1},
+                                  {"miles": 999_999}])
+def test_nettoyer_retire_au_dessus_des_plafonds(trop):
+    df = pd.DataFrame([ligne(), ligne(**trop)])
+    assert len(nettoyer(df, minimum_annonces=1)) == 1
 
 
 def test_nettoyer_ne_modifie_pas_l_original():
-    df = pd.DataFrame([ligne(), ligne(price=-1)])
-    nettoyer(df)
-    assert len(df) == 2
+    df = pd.DataFrame([ligne(), ligne(price=-1), ligne(trim="lx")])
+    nettoyer(df, minimum_annonces=1)
+    assert len(df) == 3
+    assert df["trim"].iloc[2] == "lx"
 
+
+def test_harmoniser_majuscules_garde_l_ecriture_la_plus_frequente():
+    serie = pd.Series(["Base", "base", "Base", "E-PACE", "E-Pace", "LX"])
+    # égalité E-PACE / E-Pace : la première dans l'ordre alphabétique
+    assert list(harmoniser_majuscules(serie)) == ["Base", "Base", "Base",
+                                                  "E-PACE", "E-PACE", "LX"]
+
+
+def test_nettoyer_harmonise_modele_et_version():
+    df = pd.DataFrame([ligne(trim="Base"), ligne(trim="Base"), ligne(trim="base"),
+                       ligne(model="civic")])
+    resultat = nettoyer(df, minimum_annonces=1)
+    assert set(resultat["trim"]) == {"Base", "LX"}
+    assert set(resultat["model"]) == {"Civic"}
+
+
+def test_nettoyer_retire_les_marques_rares():
+    df = pd.DataFrame([ligne(make="Honda")] * 3 + [ligne(make="Lotus")] * 2)
+    resultat = nettoyer(df, minimum_annonces=3)
+    assert list(resultat["make"]) == ["Honda"] * 3
+
+
+def test_nettoyer_compte_les_marques_apres_les_autres_filtres():
+    # 3 Ferrari, mais 2 sont trop chères : il n'en reste qu'une, donc la marque part
+    df = pd.DataFrame([ligne(make="Ferrari", price=250_000)] * 2
+                      + [ligne(make="Ferrari", price=90_000)] + [ligne()] * 3)
+    assert set(nettoyer(df, minimum_annonces=2)["make"]) == {"Honda"}
 
 # ---------- VariableNumerique ----------
 

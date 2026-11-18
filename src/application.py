@@ -115,7 +115,7 @@ class Historique:
                 with open(chemin, encoding="utf-8") as f:
                     lignes = json.load(f)
             except json.JSONDecodeError:
-                # idée d'Avery : un message clair plutôt qu'une erreur incompréhensible
+                #  un message clair plutôt qu'une erreur incompréhensible
                 raise ValueError(f"Le fichier d'historique est abîmé : {chemin}. "
                                  "Supprimez-le pour repartir d'un historique vide.") from None
             if not isinstance(lignes, list):

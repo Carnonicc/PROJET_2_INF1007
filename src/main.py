@@ -13,7 +13,7 @@ from modele import ModeleLineaire, charger_metadonnees
 RACINE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CHEMIN_MODELE = os.path.join(RACINE, "modeles", "modele.joblib")
 CHEMIN_METADONNEES = os.path.join(RACINE, "modeles", "metadonnees.json")
-# avec les autres données (idée d'Avery) ; fichier propre à chaque utilisateur, ignoré par Git
+# avec les autres données; fichier propre à chaque utilisateur, ignoré par Git
 CHEMIN_HISTORIQUE = os.path.join(RACINE, "donnees", "historique.json")
 
 

@@ -1,9 +1,14 @@
+# CSV canadien complet (69 Mo) : à télécharger sur Kaggle, voir README.md
 donnees/ca-dealers-used.csv
-#ca-dealers-used-qc.csv
-# fichiers générés par Python et coverage
+
+# historique des estimations, propre à chaque utilisateur
+donnees/historique.json
+
+# fichiers générés par Python, pytest et coverage
 __pycache__/
 *.pyc
 .coverage
 .pytest_cache/
-donnees/historique.json
-EXPLICATION.md
+
+# réglages personnels de l'éditeur
+.vscode/

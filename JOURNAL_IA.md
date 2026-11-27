@@ -15,7 +15,7 @@ chacun de nous doit pouvoir expliquer n'importe quelle ligne.
   a écrit les tests pytest (`tests/`) à partir de ce que chaque fonction devait
   faire. Ces tests décrivaient le comportement attendu ; nous avons ensuite
   écrit le code pour les faire passer, en lançant `python -m pytest` à chaque
-  étape. Les tests ont été complétés au fil du projet (106 tests à la fin).
+  étape. Les tests ont été complétés au fil du projet (129 tests à la fin).
 - **L'équipe décide, l'IA aide.** Les choix du projet ont été pris par nous
   deux ; l'IA a servi à expliquer, proposer des options et coder une fois la
   décision prise.
@@ -34,6 +34,7 @@ chacun de nous doit pouvoir expliquer n'importe quelle ligne.
 | Nettoyage | Coder nos règles : prix > 100 000 \$, kilométrage > 250 000 miles, marques de moins de 10 annonces, harmonisation des majuscules. | Les seuils ont été choisis par nous ; l'IA les a codés et a ajouté les tests correspondants. | Tests ; nouvelles métriques comparées aux anciennes (voir `DECISIONS.md`). |
 | Modèle et entraînement | Expliquer les métadonnées, aider à écrire `entrainer.py`. | Gardé ; nous avons décidé de mettre les fichiers de `modeles/` sur Git. | Script lancé, métriques vérifiées contre le modèle de référence. |
 | Interface | Comparer nos deux versions (branches `carnon` et `avery`) et recommander une option. | Version `carnon` gardée, enrichie des idées d'Avery : saisie en kilomètres et gestion de l'`OSError`. | Même prix obtenu avec les deux versions ; tests de l'interface. |
+| Graphique dans l'interface | Ajouter un graphique Matplotlib intégré à la fenêtre, mis à jour à chaque prédiction, avec la logique séparée de l'affichage et des tests. | L'IA a proposé un plan (histogramme des prix des annonces comparables avec la position de l'estimation) et signalé que cela obligeait à relire le CSV, contrairement à une décision de `DECISIONS.md` ; nous avons accepté. Nous avons **refusé** que l'IA fasse des commits ou des envois sur GitHub (faits par nous) et exigé que le code existant ne soit pas modifié : le graphique est seulement ajouté (`ReferencePrix` dans `donnees.py`, `ajouter_graphique` dans `application.py`, qui enveloppe le rappel existant sans le changer). Source consultée : exemple Matplotlib « Embedding in Tk ». | 23 nouveaux tests (`tests/test_graphique.py`), les 106 anciens passent toujours ; fenêtre ouverte avec une saisie valide et une saisie invalide. |
 | Git et GitHub | Expliquer les branches, les fusions et le retrait d'un fichier du dépôt. | Commandes lancées par nous après explication. | État vérifié sur GitHub. |
 | Documentation | Aide à rédiger `DECISIONS.md`, `README.md` et ce journal ; un document d'explication du code pour étudier (retiré du dépôt). | Textes relus et corrigés par nous ; les chiffres viennent de `modeles/metadonnees.json`. | Relecture en équipe. |
 | Présentation | Diagramme des liens entre les fichiers et les fonctions pour le PowerPoint. | Relu et adapté par nous. | — |

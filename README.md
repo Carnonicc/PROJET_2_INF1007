@@ -20,7 +20,9 @@ vues pendant l'entraînement) :
 | **Régression linéaire** | **3 988 \$** | 5 957 \$ | **36,8 %** |
 
 Le graphique `modeles/predit_vs_reel.png` compare le prix prédit au prix réel
-pour chaque voiture de test.
+pour chaque voiture de test. L'application affiche aussi, après chaque
+estimation, un graphique qui situe le prix estimé parmi les annonces
+(voir [Lire le graphique de comparaison](#lire-le-graphique-de-comparaison)).
 
 ## Installation et lancement
 
@@ -79,20 +81,50 @@ majuscules) est fait par `JeuDeDonnees` et ramène les données à 33 333 voitur
 - Les estimations sont conservées dans l'onglet *Historique* et dans
   `donnees/historique.json` (fichier local, ignoré par Git). Si ce fichier ne
   peut pas être écrit, le prix reste affiché et un message l'indique.
+- Sous la qualité du modèle, un graphique compare le prix estimé aux prix des
+  annonces du Québec (voir ci-dessous). Il est redessiné à chaque clic sur
+  « Prédire ».
+
+### Lire le graphique de comparaison
+
+- **Les barres bleues** montrent combien d'annonces (axe vertical) sont
+  affichées à chaque prix, en dollars (axe horizontal). Ce sont les annonces de
+  la **même marque et du même modèle** que la voiture saisie (par exemple les
+  Honda Civic). S'il y en a moins de 30, le graphique compare à toute la marque
+  (« Honda (tous modèles) »), puis à toutes les annonces (« toutes les
+  marques »). La légende donne le groupe et le nombre d'annonces.
+- **La ligne orange** est votre estimation.
+- **Le titre** le dit en une phrase : « Votre estimation est plus élevée que
+  93 % d'entre elles » veut dire que 93 % des annonces comparables sont moins
+  chères que le prix estimé. Une ligne à droite des barres signale une
+  estimation plutôt haute pour ce modèle, une ligne à gauche une estimation
+  plutôt basse.
+- Ce sont des **prix demandés** par des concessionnaires (pas des prix de
+  vente), nettoyés avec les mêmes règles que pour l'entraînement. Le graphique
+  ne tient compte ni de l'année ni du kilométrage : une voiture récente et peu
+  roulée sera normalement à droite de la majorité des annonces.
+- Si la saisie est invalide ou si l'estimation est impossible, le graphique est
+  remplacé par un message. Si `donnees/ca-dealers-used-qc.csv` est absent,
+  l'application fonctionne quand même, sans graphique.
+
+L'intégration du graphique dans la fenêtre suit l'exemple de Matplotlib
+« Embedding in Tk » :
+<https://matplotlib.org/stable/gallery/user_interfaces/embedding_in_tk_sgskip.html>.
 
 ## Organisation du dépôt
 
 ```
 src/
-  donnees.py       lecture, nettoyage, classes Variable, séparation entraînement/test
+  donnees.py       lecture, nettoyage, classes Variable, séparation entraînement/test,
+                   calcul du graphique de comparaison (ReferencePrix)
   modele.py        métriques (NumPy), ModeleReference, ModeleLineaire, sauvegarde
   exceptions.py    exceptions du projet
   application.py   Estimateur (validation + prédiction) et Historique
-  interface.py     fenêtre Tkinter
+  interface.py     fenêtre Tkinter et affichage du graphique Matplotlib
   entrainer.py     point d'entrée : entraînement et évaluation
   main.py          point d'entrée : application
 tests/             tests pytest (logique et interface)
-donnees/           CSV du Québec
+donnees/           CSV du Québec (entraînement et graphique de comparaison)
 modeles/           modèle entraîné, métadonnées et graphique
 ```
 

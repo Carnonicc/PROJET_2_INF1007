@@ -11,3 +11,7 @@ class ModeleNonEntraineError(Exception):
 
 class EstimationImpossibleError(Exception):
     """Levée quand le modèle donne un prix impossible (nul ou négatif)."""
+
+
+class GraphiqueIndisponibleError(Exception):
+    """Levée quand les données du graphique de comparaison ne peuvent pas être préparées."""

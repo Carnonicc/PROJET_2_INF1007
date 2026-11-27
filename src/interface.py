@@ -14,6 +14,18 @@ from typing import Callable
 from application import formater_prix, texte_metriques
 from exceptions import DonneeInvalideError, EstimationImpossibleError
 
+# graphique intégré à la fenêtre Tkinter, d'après l'exemple « Embedding in Tk » :
+# https://matplotlib.org/stable/gallery/user_interfaces/embedding_in_tk_sgskip.html
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+from matplotlib.ticker import FuncFormatter
+
+from donnees import DonneesGraphique
+
+COULEUR_ANNONCES = "#257de0"      # barres : les annonces
+COULEUR_ESTIMATION = "#f47230"    # ligne : l'estimation de l'utilisateur
+COULEUR_TEXTE = "#444444"
+
 # champs en cascade : choisir l'un vide et recalcule ceux qui le suivent
 CASCADE = ["make", "model", "trim"]
 
@@ -127,6 +139,8 @@ class InterfaceUtilisateur(ttk.Frame):
         qualite.grid(row=1, column=0, sticky="ew", pady=(20, 0))
         ttk.Label(qualite, text=texte_metriques(self.metadonnees.get("metriques", {})),
                   justify="left").grid(row=0, column=0, sticky="w")
+
+        self._construire_graphique(panneau_resultat)
 
         self._construire_historique(page_historique)
 
@@ -259,6 +273,54 @@ class InterfaceUtilisateur(ttk.Frame):
                                 values=(ligne.get("date_heure", ""),
                                         formater_prix(ligne.get("prix_estime", 0)),
                                         vehicule))
+
+    # ---------- graphique de comparaison (affichage seulement) ----------
+
+    def _construire_graphique(self, parent: ttk.Frame) -> None:
+        """Crée le cadre du graphique Matplotlib, intégré sous la qualité du modèle."""
+        cadre = ttk.LabelFrame(parent, text="Comparaison avec les annonces du Québec",
+                               padding=6)
+        cadre.grid(row=2, column=0, sticky="nsew", pady=(20, 0))
+        parent.rowconfigure(2, weight=1)
+        self.figure = Figure(figsize=(5.8, 3.6), dpi=100, layout="constrained")
+        self.axes = self.figure.add_subplot()
+        self.canvas_graphique = FigureCanvasTkAgg(self.figure, master=cadre)
+        self.canvas_graphique.get_tk_widget().pack(fill="both", expand=True)
+        self.afficher_message_graphique(
+            "Le graphique apparaîtra ici après une estimation.")
+
+    def afficher_message_graphique(self, texte: str) -> None:
+        """Remplace le graphique par un message (saisie invalide, données absentes...)."""
+        self.axes.clear()
+        self.axes.set_axis_off()
+        self.axes.text(0.5, 0.5, texte, ha="center", va="center", wrap=True,
+                       fontsize=11, color=COULEUR_TEXTE, transform=self.axes.transAxes)
+        self.canvas_graphique.draw_idle()
+
+    def afficher_graphique(self, donnees: DonneesGraphique) -> None:
+        """Dessine l'histogramme des prix des annonces et la ligne de l'estimation."""
+        axes = self.axes
+        axes.clear()
+        axes.set_axis_on()
+        bornes = donnees.bornes
+        axes.bar(bornes[:-1], donnees.comptes, width=bornes[1:] - bornes[:-1],
+                 align="edge", color=COULEUR_ANNONCES, edgecolor="white", linewidth=1,
+                 label=f"Annonces {donnees.groupe} ({donnees.nombre_annonces})")
+        axes.axvline(donnees.prix_estime, color=COULEUR_ESTIMATION, linewidth=2.5,
+                     label=f"Votre estimation : {formater_prix(donnees.prix_estime)}")
+        centile = f"{donnees.centile:.0f} %"
+        axes.set_title(f"Prix des annonces : {donnees.groupe}\n"
+                       f"Votre estimation est plus élevée que {centile} d'entre elles",
+                       fontsize=10)
+        axes.set_xlabel("Prix affiché dans l'annonce ($)")
+        axes.set_ylabel("Nombre d'annonces")
+        axes.xaxis.set_major_formatter(
+            FuncFormatter(lambda valeur, _position: f"{valeur:,.0f}".replace(",", " ")))
+        axes.spines[["top", "right"]].set_visible(False)
+        axes.grid(axis="y", color="#e0e0e0", linewidth=0.8)
+        axes.set_axisbelow(True)
+        axes.legend(fontsize=8, frameon=False, loc="upper right")
+        self.canvas_graphique.draw_idle()
 
 
 def lancer_interface(metadonnees: dict, on_prediction: Callable | None = None,

@@ -6,11 +6,14 @@ Les tests de tests/test_donnees.py décrivent le comportement attendu.
 import math
 import os
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
 from exceptions import DonneeInvalideError
+from exceptions import GraphiqueIndisponibleError
 
 CIBLE = "price"
 COLONNES_NUMERIQUES = ["miles", "year", "engine_size"]
@@ -391,3 +394,141 @@ class JeuDeDonnees:
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=taille_test, random_state=graine)
         return X_train, X_test, y_train, y_test
+
+
+# ---------- graphique : situer une estimation parmi les annonces ----------
+# (calcul seulement : le dessin est fait par interface.py)
+
+# sous ce nombre d'annonces, le groupe est trop petit pour un histogramme lisible
+MINIMUM_ANNONCES_COMPARABLES = 30
+NOMBRE_CLASSES_GRAPHIQUE = 30
+
+
+def _verifier_prix(prix: np.ndarray) -> np.ndarray:
+    """Convertit `prix` en tableau NumPy de flottants et vérifie qu'il est utilisable.
+
+    Échoue : ValueError si le tableau est vide ou contient une valeur non finie (NaN, inf).
+    """
+    prix = np.asarray(prix, dtype=float)
+    if prix.size == 0:
+        raise ValueError("Aucun prix de comparaison.")
+    if not np.all(np.isfinite(prix)):
+        raise ValueError("Les prix de comparaison contiennent une valeur manquante ou infinie.")
+    return prix
+
+
+def centile_prix(prix: np.ndarray, valeur: float) -> float:
+    """Pourcentage (0 à 100) des prix strictement inférieurs à `valeur`.
+
+    Se lit : « l'estimation est plus élevée que X % des annonces ».
+    Reçoit : les prix des annonces et le prix estimé.
+    Renvoie : un flottant entre 0 et 100 (calcul vectorisé, sans boucle).
+    Échoue : ValueError si `prix` est vide ou non fini, ou si `valeur` n'est pas finie.
+    """
+    prix = _verifier_prix(prix)
+    if not np.isfinite(valeur):
+        raise ValueError(f"Prix estimé invalide : {valeur}.")
+    return float(np.mean(prix < valeur) * 100)
+
+
+def distribution_prix(prix: np.ndarray,
+                      nb_classes: int = NOMBRE_CLASSES_GRAPHIQUE
+                      ) -> tuple[np.ndarray, np.ndarray]:
+    """Histogramme des prix avec np.histogram.
+
+    Reçoit : les prix et le nombre de classes (barres).
+    Renvoie : (comptes, bornes) ; len(bornes) == len(comptes) + 1 et
+              la somme des comptes est le nombre de prix.
+    Échoue : ValueError si `prix` est vide ou non fini, ou si nb_classes < 1.
+    """
+    prix = _verifier_prix(prix)
+    if nb_classes < 1:
+        raise ValueError(f"Il faut au moins une classe, reçu {nb_classes}.")
+    comptes, bornes = np.histogram(prix, bins=nb_classes)
+    return comptes, bornes
+
+
+def prix_comparables(df: pd.DataFrame, marque: str, modele: str,
+                     minimum: int = MINIMUM_ANNONCES_COMPARABLES
+                     ) -> tuple[np.ndarray, str]:
+    """Choisit les annonces auxquelles comparer une estimation.
+
+    Même marque et même modèle s'il y en a au moins `minimum` ; sinon même
+    marque ; sinon toutes les annonces.
+    Reçoit : un DataFrame avec les colonnes make, model et CIBLE.
+    Renvoie : (prix des annonces retenues, nom du groupe pour le titre).
+    Échoue : ValueError si le DataFrame est vide.
+    """
+    if len(df) == 0:
+        raise ValueError("Aucune annonce de comparaison.")
+    meme_marque = df["make"] == marque
+    meme_modele = meme_marque & (df["model"] == modele)
+    if meme_modele.sum() >= minimum:
+        return df.loc[meme_modele, CIBLE].to_numpy(dtype=float), f"{marque} {modele}"
+    if meme_marque.sum() >= minimum:
+        return df.loc[meme_marque, CIBLE].to_numpy(dtype=float), f"{marque} (tous modèles)"
+    return df[CIBLE].to_numpy(dtype=float), "toutes les marques"
+
+
+@dataclass(frozen=True)
+class DonneesGraphique:
+    """Tout ce que l'interface doit afficher, déjà calculé."""
+
+    comptes: np.ndarray        # nombre d'annonces par classe de prix
+    bornes: np.ndarray         # limites des classes ($), une de plus que comptes
+    prix_estime: float         # prix prédit pour la voiture saisie ($)
+    centile: float             # % des annonces moins chères que l'estimation
+    groupe: str                # « Honda Civic », « Honda (tous modèles) »...
+    nombre_annonces: int
+
+
+class ReferencePrix:
+    """Prix des annonces nettoyées, pour situer une estimation sur le marché.
+
+    Composition : garde un DataFrame (make, model, price) en attribut protégé.
+    """
+
+    def __init__(self, df: pd.DataFrame) -> None:
+        """Reçoit un DataFrame déjà nettoyé (voir nettoyer).
+
+        Échoue : DonneeInvalideError s'il manque la colonne make, model ou CIBLE.
+        """
+        colonnes = ["make", "model", CIBLE]
+        manquantes = [c for c in colonnes if c not in df.columns]
+        if manquantes:
+            raise DonneeInvalideError(f"Colonnes manquantes : {manquantes}")
+        self._df = df[colonnes].reset_index(drop=True)
+
+    def __len__(self) -> int:
+        """Nombre d'annonces de référence."""
+        return len(self._df)
+
+    @classmethod
+    def depuis_csv(cls, chemin: str) -> "ReferencePrix":
+        """Charge et nettoie le CSV des annonces (mêmes règles que l'entraînement).
+
+        Échoue : FileNotFoundError si le fichier n'existe pas ;
+                 DonneeInvalideError s'il manque une colonne.
+        """
+        if not os.path.exists(chemin):
+            raise FileNotFoundError(f"Fichier des annonces introuvable : {chemin}")
+        return cls(nettoyer(charger_csv(chemin)))
+
+    def preparer(self, prix_estime: float, marque: str, modele: str,
+                 nb_classes: int = NOMBRE_CLASSES_GRAPHIQUE) -> DonneesGraphique:
+        """Prépare les données du graphique pour une estimation.
+
+        Reçoit : le prix estimé, la marque et le modèle saisis.
+        Renvoie : un DonneesGraphique.
+        Échoue : GraphiqueIndisponibleError si aucune annonce n'est disponible
+                 ou si le prix estimé n'est pas un nombre fini.
+        """
+        try:
+            prix, groupe = prix_comparables(self._df, marque, modele)
+            comptes, bornes = distribution_prix(prix, nb_classes)
+            centile = centile_prix(prix, prix_estime)
+        except ValueError as erreur:
+            raise GraphiqueIndisponibleError(str(erreur)) from erreur
+        return DonneesGraphique(comptes=comptes, bornes=bornes,
+                                prix_estime=float(prix_estime), centile=centile,
+                                groupe=groupe, nombre_annonces=int(prix.size))

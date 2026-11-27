@@ -17,6 +17,8 @@ from donnees import (COLONNES_CATEGORIELLES, COLONNES_NUMERIQUES, kilometres_ver
                      variable_depuis_dict, verifier_combinaison)
 from exceptions import EstimationImpossibleError
 from modele import TOLERANCE, ModelePrix
+from donnees import ReferencePrix
+from exceptions import DonneeInvalideError, GraphiqueIndisponibleError
 
 
 def formater_prix(prix: float) -> str:
@@ -176,3 +178,54 @@ def creer_rappels(estimateur: Estimateur, historique: Historique,
         interface.afficher_historique(historique.lignes)
 
     return on_prediction, on_actualiser_historique
+
+
+# ---------- graphique de comparaison ----------
+
+MESSAGE_GRAPHIQUE_SAISIE = ("Graphique non mis à jour : vérifiez les caractéristiques "
+                            "saisies, puis cliquez de nouveau sur « Prédire ».")
+MESSAGE_GRAPHIQUE_IMPOSSIBLE = "Pas de graphique : aucune estimation valide pour ce véhicule."
+MESSAGE_GRAPHIQUE_SANS_DONNEES = ("Graphique indisponible : les annonces de comparaison "
+                                  "n'ont pas pu être chargées.")
+
+
+def ajouter_graphique(on_prediction: Callable, estimateur: Estimateur,
+                      reference: ReferencePrix | None) -> Callable:
+    """Enveloppe `on_prediction` pour mettre à jour le graphique après chaque clic.
+
+    Le rappel d'origine est appelé tel quel (prix, historique, erreurs inchangés) ;
+    ensuite le graphique est redessiné, ou remplacé par un message si la saisie
+    est invalide, l'estimation impossible ou `reference` vaut None.
+    Les erreurs sont relancées pour que l'interface les affiche comme avant.
+    Renvoie : la nouvelle fonction on_prediction(interface, saisies).
+    """
+
+    def mettre_a_jour_graphique(interface, saisies: dict[str, str]) -> None:
+        if reference is None:
+            interface.afficher_message_graphique(MESSAGE_GRAPHIQUE_SANS_DONNEES)
+            return
+        prix, caracteristiques = estimateur.estimer(saisies)
+        try:
+            donnees = reference.preparer(prix, caracteristiques["make"],
+                                         caracteristiques["model"])
+        except GraphiqueIndisponibleError as erreur:
+            interface.afficher_message_graphique(f"Graphique indisponible : {erreur}")
+        else:
+            interface.afficher_graphique(donnees)
+
+    def on_prediction_avec_graphique(interface, saisies: dict[str, str]) -> None:
+        try:
+            on_prediction(interface, saisies)
+        except (DonneeInvalideError, ValueError):
+            interface.afficher_message_graphique(MESSAGE_GRAPHIQUE_SAISIE)
+            raise
+        except EstimationImpossibleError:
+            interface.afficher_message_graphique(MESSAGE_GRAPHIQUE_IMPOSSIBLE)
+            raise
+        except OSError:
+            # le prix est affiché, seul l'historique a échoué : le graphique reste utile
+            mettre_a_jour_graphique(interface, saisies)
+            raise
+        mettre_a_jour_graphique(interface, saisies)
+
+    return on_prediction_avec_graphique
